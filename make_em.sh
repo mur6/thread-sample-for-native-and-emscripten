@@ -27,6 +27,14 @@ build_p() {
       -o $BUILD_DIR/calculate_primes_parallel.html
 }
 
+run() {
+    emrun --browser chrome $BUILD_DIR/calculate_primes.html
+}
+
+run_p() {
+    emrun --browser chrome $BUILD_DIR/calculate_primes_parallel.html
+}
+
 all () {
     clean
     build
