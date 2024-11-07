@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BUILD_DIR="build"
+BUILD_DIR="build/native"
 
 
 clean() {
