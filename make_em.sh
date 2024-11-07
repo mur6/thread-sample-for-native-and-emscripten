@@ -25,7 +25,6 @@ build_p() {
       -s PTHREAD_POOL_SIZE=24 \
       --emrun \
       -o $BUILD_DIR/calculate_primes_parallel.html
-
 }
 
 all () {
