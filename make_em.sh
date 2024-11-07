@@ -22,8 +22,12 @@ build_p() {
     #   -o $BUILD_DIR/calculate_primes_parallel.html
     emcc src/calculate_primes_parallel.cpp -std=c++17 \
       -pthread \
+      -gsource-map \
+      -s USE_PTHREADS=1 \
+      -s PROXY_TO_PTHREAD=1 \
       -s ASSERTIONS=1 \
       -s PTHREAD_POOL_SIZE=$PTHREAD_POOL_SIZE \
+      --threadprofiler \
       --emrun \
       -o $BUILD_DIR/calculate_primes_parallel.html
 }
@@ -33,7 +37,9 @@ run() {
 }
 
 run_p() {
-    emrun --browser chrome $BUILD_DIR/calculate_primes_parallel.html
+    emrun --browser chrome \
+      --serve_after_exit \
+      $BUILD_DIR/calculate_primes_parallel.html
 }
 
 all () {
