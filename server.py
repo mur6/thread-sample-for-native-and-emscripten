@@ -15,4 +15,8 @@ if __name__ == "__main__":
     PORT = 8080
     with socketserver.TCPServer(("", PORT), WasmHandler) as httpd:
         print("Listening on port {}. Press Ctrl+C to stop.".format(PORT))
-        httpd.serve_forever()
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            pass
+        httpd.server_close()
