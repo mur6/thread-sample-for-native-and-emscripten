@@ -63,7 +63,7 @@ int main()
     std::cout << "Finding primes between " << start << " and " << end << std::endl;
 
     #ifdef __EMSCRIPTEN__
-        unsigned int thread_count = 8;
+        unsigned int thread_count = 4;
     #else
         unsigned int thread_count = std::thread::hardware_concurrency();
         if (thread_count == 0)
