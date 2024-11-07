@@ -1,7 +1,7 @@
 #!/bin/bash
 
 BUILD_DIR="build/em"
-
+PTHREAD_POOL_SIZE=8
 
 clean() {
     rm -rf $BUILD_DIR
@@ -9,8 +9,9 @@ clean() {
 
 build() {
     mkdir -p $BUILD_DIR
-    emcc src/calculate_primes.cpp -O1 -std=c++17 -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=4 \
-        -o $BUILD_DIR/calculate_primes.html
+    emcc src/calculate_primes.cpp -O1 -std=c++17 -s USE_PTHREADS=1 \
+      -s PTHREAD_POOL_SIZE=$PTHREAD_POOL_SIZE \
+      -o $BUILD_DIR/calculate_primes.html
 }
 
 build_p() {
@@ -22,7 +23,7 @@ build_p() {
     emcc src/calculate_primes_parallel.cpp -std=c++17 \
       -pthread \
       -s ASSERTIONS=1 \
-      -s PTHREAD_POOL_SIZE=24 \
+      -s PTHREAD_POOL_SIZE=$PTHREAD_POOL_SIZE \
       --emrun \
       -o $BUILD_DIR/calculate_primes_parallel.html
 }
