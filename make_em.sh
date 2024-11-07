@@ -10,7 +10,7 @@ clean() {
 build() {
     mkdir -p $BUILD_DIR
     emcc src/calculate_primes.cpp -O1 -std=c++17 -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=4 \
-        -o $BUILD_DIR/pthreads.html
+        -o $BUILD_DIR/calculate_primes.html
 }
 
 build_p() {
@@ -23,8 +23,6 @@ all () {
     clean
     build
     build_p
-    run
-    run_p
 }
 
 # switch by argument
