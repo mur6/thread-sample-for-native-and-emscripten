@@ -15,8 +15,17 @@ build() {
 
 build_p() {
     mkdir -p $BUILD_DIR
-    emcc src/calculate_primes_parallel.cpp -O1 -std=c++17 -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=4 \
-        -o $BUILD_DIR/calculate_primes_parallel.html
+    # emcc src/calculate_primes_parallel.cpp -std=c++17 \
+    #   -s USE_PTHREADS=1 \
+    #   -s PTHREAD_POOL_SIZE=4 \
+    #   -o $BUILD_DIR/calculate_primes_parallel.html
+    emcc src/calculate_primes_parallel.cpp -std=c++17 \
+      -pthread \
+      -s ASSERTIONS=1 \
+      -s PTHREAD_POOL_SIZE=24 \
+      --emrun \
+      -o $BUILD_DIR/calculate_primes_parallel.html
+
 }
 
 all () {
