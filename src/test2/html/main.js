@@ -31,28 +31,6 @@ async function load_test_images(Module) {
 }
 
 
-
-const run = async () => {
-    const Module = await loadWASM();
-    try {
-
-        const init_params = new Module.InitParams(scan_id, resourcePath, workingPath, appendage, appType);
-
-        // ----------------- Init -----------------
-        // document.getElementById('output').innerHTML += `<br>init start.`;
-        // init(init_params, Module);
-        // document.getElementById('output').innerHTML += `<br>init end.`;
-
-    } catch (error) {
-        console.log(error.stack);
-        console.log('Failed to run the module:', error);
-    }
-    console.log('Module is ready:', Module);
-};
-
-
-// const stat_result = FS.stat('/data');
-// console.log('Stat result:', stat_result);
 async function decodeJpegToUint8Array(Module, filePath) {
     // Emscriptenのファイルシステムからファイルを読み取る
     const fileData = Module.FS.readFile(filePath);
@@ -90,5 +68,24 @@ async function decodeJpegToUint8Array(Module, filePath) {
 
     return uint8Array;
 }
+
+
+const run = async () => {
+    const Module = await loadWASM();
+    try {
+        const result = await Module.asyncCalculation(42);
+        console.log('result:', result);
+        // ----------------- Init -----------------
+        // document.getElementById('output').innerHTML += `<br>init start.`;
+        // init(init_params, Module);
+        // document.getElementById('output').innerHTML += `<br>init end.`;
+
+    } catch (error) {
+        console.log(error.stack);
+        console.log('Failed to run the module:', error);
+    }
+    console.log('Module is ready:', Module);
+};
+
 
 run();
