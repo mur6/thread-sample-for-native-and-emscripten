@@ -1,40 +1,5 @@
 import loadWASM from './async_test.js';
 
-const removeFiles = async (FS) => {
-    console.log('FS:', FS);
-    FS.unlink("/outputs_wasm_2/my_scan_0000/test.txt");
-    var names = FS.readdir("/outputs_wasm_2/my_scan_0000");
-    console.log('/outputs_wasm_2/my_scan_0000: dirs:', names);
-    FS.rmdir("/outputs_wasm_2/my_scan_0000");
-    var names = FS.readdir("/outputs_wasm_2");
-    console.log('/outputs_wasm_2: Names:', names);
-}
-
-function validate(init_params, buffer, Module) {
-    const validate_info = new Module.ZsValidateInfo();
-    // const buffer = new Uint8Array(100);
-    const width = 720;
-    const height = 1280;
-    const state = Module.ZsStepByStepStates.CaptureTop;
-    const result = Module.ValidateRgbImageFromUint8Array(
-        init_params,
-        validate_info,
-        buffer,
-        width,
-        height,
-        state)
-    console.log('Validate Result:', result.success);
-    return result;
-}
-
-function init (init_params, Module) {
-    const r = Module.custom_zs_init(init_params);
-    console.log('Init result:', r);
-}
-
-
-
-
 function pad(num, size) {
     // number to string
     let s = num.toString();
@@ -45,20 +10,6 @@ function pad(num, size) {
 }
 
 async function load_test_images(Module) {
-    // image files:
-    // build_6/_deps/zozomattestdata-src/Reconstruct/Duncan_1_Foot_Left/zozomat_image_0001.in.jpg
-    // build_6/_deps/zozomattestdata-src/Reconstruct/Duncan_1_Foot_Left/zozomat_image_0002.in.jpg
-    // build_6/_deps/zozomattestdata-src/Reconstruct/Duncan_1_Foot_Left/zozomat_image_0003.in.jpg
-    // build_6/_deps/zozomattestdata-src/Reconstruct/Duncan_1_Foot_Left/zozomat_image_0004.in.jpg
-    // build_6/_deps/zozomattestdata-src/Reconstruct/Duncan_1_Foot_Left/zozomat_image_0006.in.jpg
-    // build_6/_deps/zozomattestdata-src/Reconstruct/Duncan_1_Foot_Left/zozomat_image_0007.in.jpg
-    // build_6/_deps/zozomattestdata-src/Reconstruct/Duncan_1_Foot_Left/zozomat_image_0008.in.jpg
-    // build_6/_deps/zozomattestdata-src/Reconstruct/Duncan_1_Foot_Left/zozomat_image_0009.in.jpg
-    // build_6/_deps/zozomattestdata-src/Reconstruct/Duncan_1_Foot_Left/zozomat_image_0010.in.jpg
-    // build_6/_deps/zozomattestdata-src/Reconstruct/Duncan_1_Foot_Left/zozomat_image_0011.in.jpg
-    // build_6/_deps/zozomattestdata-src/Reconstruct/Duncan_1_Foot_Left/zozomat_image_0013.in.jpg
-    // build_6/_deps/zozomattestdata-src/Reconstruct/Duncan_1_Foot_Left/zozomat_image_0015.in.jpg
-
     const image_ids = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 13, 15];
     console.log('Image IDs:', image_ids);
     const filePaths = image_ids.map(
@@ -83,82 +34,20 @@ async function load_test_images(Module) {
 
 const run = async () => {
     const Module = await loadWASM();
-    const [buffers, filePaths] = await load_test_images(Module);
     try {
-        // removeFiles(Module.FS);
-        // Module.callMain([]);
-        document.getElementById('output').innerHTML = 'Module is ready';
-        const scan_id = "my_scan_0000";
-        const resourcePath = "/data";
-        const workingPath = "/outputs_wasm_2";
-        const appendage = Module.zs_left_right.ZS_SCAN_LEFT_APPENDAGE;
-        const appType = Module.zs_app_type.ZS_APP_TYPE_CLIENT;
-        // append div#output to message text with the result
-        document.getElementById('output').innerHTML += `<br>init params.`;
-        document.getElementById('output').innerHTML += `<br>scan_id: ${scan_id}`;
-        document.getElementById('output').innerHTML += `<br>resourcePath: ${resourcePath}`;
-        document.getElementById('output').innerHTML += `<br>workingPath: ${workingPath}`;
-        document.getElementById('output').innerHTML += `<br>appendage: ${appendage}`;
-        document.getElementById('output').innerHTML += `<br>appType: ${appType}`;
 
         const init_params = new Module.InitParams(scan_id, resourcePath, workingPath, appendage, appType);
 
         // ----------------- Init -----------------
-        document.getElementById('output').innerHTML += `<br>init start.`;
-        init(init_params, Module);
-        document.getElementById('output').innerHTML += `<br>init end.`;
-
-        setTimeout(async () => {
-            // ----------------- Validate -----------------
-            for (let i = 0; i < buffers.length; i++) {
-                const filePath = filePaths[i];
-                document.getElementById('output').innerHTML += `<br>validate start for file: ${filePath}`;
-                const buffer = buffers[i];
-                const result = validate(init_params, buffer, Module);
-                document.getElementById('output').innerHTML += `<br>validate end:  result.success=${result.success}`;
-                // wait 3 seconds
-                await new Promise((resolve) => setTimeout(resolve, 900));
-            }
-            // document.getElementById('output').innerHTML += `<br>validate start.`;
-            // const filePath = "/Duncan_1_Foot_Left/zozomat_image_0002.in.jpg";
-            // decodeJpegToUint8Array(Module, filePath).then((buffer) => {
-            //     validate(init_params, buffer, Module);
-            // });
-            // document.getElementById('output').innerHTML += `<br>validate end.`;
-            console.log('%%%%%%%: Validate end.');
-            setTimeout(async () => {
-                console.log('%%%%%%%: Foot Model start.');
-                document.getElementById('output').innerHTML += `<br>Foot Model start.`;
-                const footModel = Module.BuildAndReturnFootModel(scan_id, init_params);
-                console.log('Foot Model:', footModel);
-                // .property("header", &FootBin::header)
-                // .property("scanData", &FootBin::scanData)
-                // .property("mesh", &FootBin::mesh)
-                // .property("measurements", &FootBin::measurements)
-                // .property("footInfo", &FootBin::footInfo)
-                const header = footModel.header;
-                console.log('Header:', header);
-                const scanData = footModel.scanData;
-                console.log('Scan Data:', scanData);
-                const mesh = footModel.mesh;
-                console.log('Mesh:', mesh);
-                const measurements = Module.convertFootBinForDebug(footModel);
-                for (var i = 0; i < measurements.size(); i++) {
-                    console.log("Measurement:", measurements.get(i));
-                }
-                console.log('Measurements:', measurements);
-                const footInfo = footModel.footInfo;
-                console.log('Foot Info:', footInfo);
-                document.getElementById('output').innerHTML += `<br>Foot Model end.`;
-            }, 3000);
-        }, 3000);
-
+        // document.getElementById('output').innerHTML += `<br>init start.`;
+        // init(init_params, Module);
+        // document.getElementById('output').innerHTML += `<br>init end.`;
 
     } catch (error) {
         console.log(error.stack);
-    console.log('Failed to run the module:', error);
+        console.log('Failed to run the module:', error);
     }
-  console.log('Module is ready:', Module);
+    console.log('Module is ready:', Module);
 };
 
 
@@ -202,17 +91,4 @@ async function decodeJpegToUint8Array(Module, filePath) {
     return uint8Array;
 }
 
-async function image_load_test() {
-    const Module = await loadWASM();
-    try {
-        const filePath = "/Duncan_1_Foot_Left/zozomat_image_0001.in.jpg";
-        const uint8Array = await decodeJpegToUint8Array(Module, filePath);
-        console.log('Decoded Uint8Array:', uint8Array);
-    } catch (error) {
-        console.error('Error decoding JPEG:', error);
-    }
-}
-
-
 run();
-// image_load_test();
