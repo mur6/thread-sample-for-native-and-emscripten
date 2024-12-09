@@ -7,11 +7,12 @@
 
 int long_running_calculation(int input) {
     // 重い計算をここで実行
-    int result = 0;
-    for(int i = 0; i < input * 100; i++) {
-        result += i;
-    }
-    return result;
+    // int result = 0;
+    // for(int i = 0; i < input * 100; i++) {
+    //     result += i;
+    // }
+    std::this_thread::sleep_for(std::chrono::seconds(20));
+    return input * 2;
 }
 
 int calc()
@@ -65,5 +66,7 @@ int main(int arg, char** argv){
         console.log('setInterval');
     }, 1000);
   );
+
+  emscripten_exit_with_live_runtime();
   return 0;
 }
