@@ -12,7 +12,7 @@ int long_running_calculation(int input) {
     //     result += i;
     // }
     // std::this_thread::sleep_for(std::chrono::seconds(20));
-    for(int i = 0; i < 30; i++) {
+    for(int i = 0; i < 10; i++) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
         std::cout << "計算中... " << i << std::endl;
     }

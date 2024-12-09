@@ -14,6 +14,8 @@ build() {
         --pre-js src/test2/pre.js \
         -s EXIT_RUNTIME=0 \
         -s ASYNCIFY=1 \
+        -s MODULARIZE=1 \
+        -s EXPORT_ES6=1 \
         -s 'ASYNCIFY_IMPORTS=["asyncCalculation"]' \
         -s DISABLE_EXCEPTION_CATCHING=0 \
         -s PTHREAD_POOL_SIZE=$PTHREAD_POOL_SIZE \

@@ -73,6 +73,12 @@ async function decodeJpegToUint8Array(Module, filePath) {
 const run = async () => {
     const Module = await loadWASM();
     try {
+        setTimeout(() => {
+            console.log('setTimeout');
+        }, 1000);
+        setInterval(() => {
+            console.log('setInterval');
+        }, 1000);
         const result = await Module.asyncCalculation(42);
         console.log('result:', result);
         // ----------------- Init -----------------
@@ -89,3 +95,19 @@ const run = async () => {
 
 
 run();
+
+
+var count = 0;
+function changeGreetings() {
+    count++;
+    document.getElementById('greetings').innerHTML = 'Hello, WebAssembly! ' + count;
+    // document.getElementById('greetings').innerHTML = 'Hello, WebAssembly!';
+}
+
+// when document loaded
+document.addEventListener('DOMContentLoaded', function () {
+    // document.getElementById('output').innerHTML += '<br>DOMContentLoaded';
+    console.log('DOMContentLoaded');
+    // bind the function to the button
+    document.getElementById('changeGreetings').addEventListener('click', changeGreetings);
+});
