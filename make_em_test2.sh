@@ -12,6 +12,7 @@ build() {
     emcc src/test2/main.cpp -pthread \
         --bind \
         --emrun \
+        -s ASYNCIFY=1 \
         -s EXIT_RUNTIME=0 \
         -s PROXY_TO_PTHREAD=1 \
         -s PTHREAD_POOL_SIZE=$PTHREAD_POOL_SIZE \
