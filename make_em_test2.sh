@@ -26,6 +26,11 @@ run() {
     emrun --browser chrome $BUILD_DIR/async_test.html
 }
 
+run_server() {
+    cp $BUILD_DIR/*.js $BUILD_DIR/*.wasm src/test2/html/
+    python3 server.py
+}
+
 all () {
     clean
     build
@@ -37,16 +42,14 @@ if [ "$1" == "clean" ]; then
     clean
 elif [ "$1" == "build" ]; then
     build
-elif [ "$1" == "build_p" ]; then
-    build_p
 elif [ "$1" == "run" ]; then
     run
-elif [ "$1" == "run_p" ]; then
-    run_p
+elif [ "$1" == "run_server" ]; then
+    run_server
 elif [ "$1" == "all" ]; then
     all
 else
     # help
-    echo "Usage: $0 [clean|build|run|build_p|run_p|all]"
+    echo "Usage: $0 [clean|build|run|run_server|all]"
 fi
 
