@@ -7,6 +7,7 @@
 #include <mutex>
 #include <chrono>
 
+#include <emscripten.h>
 #include "const.hpp"
 
 
@@ -87,6 +88,7 @@ int main()
         int thread_end = (i == thread_count - 1) ? end : thread_start + range_per_thread - 1;
 
         threads.emplace_back(FindPrimesParallel, thread_start, thread_end, std::ref(primes_found));
+        emscripten_sleep(0);
     }
 
     // 全スレッドの完了を待つ

@@ -25,9 +25,8 @@ build_p() {
       -gsource-map \
       -s USE_PTHREADS=1 \
       -s PROXY_TO_PTHREAD=1 \
-      -s ASSERTIONS=1 \
       -s PTHREAD_POOL_SIZE=$PTHREAD_POOL_SIZE \
-      --threadprofiler \
+      -s ASYNCIFY=1 \
       --emrun \
       -o $BUILD_DIR/calculate_primes_parallel.html
 }
