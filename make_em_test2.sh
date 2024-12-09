@@ -13,10 +13,14 @@ build() {
         --bind \
         --pre-js src/test2/pre.js \
         -s EXIT_RUNTIME=0 \
-        -s PROXY_TO_PTHREAD=1 \
+        -s ASYNCIFY=1 \
+        -s 'ASYNCIFY_IMPORTS=["asyncCalculation"]' \
+        -s DISABLE_EXCEPTION_CATCHING=0 \
         -s PTHREAD_POOL_SIZE=$PTHREAD_POOL_SIZE \
         -o $BUILD_DIR/async_test.html
 }
+# このエラーは、__cxa_init_primary_exceptionというシンボルが見つからないために発生しています。これは、C++の例外処理に関連するシンボルです。EmscriptenでC++の例外処理を有効にする必要があります。
+
 
 run() {
     emrun --browser chrome $BUILD_DIR/async_test.html

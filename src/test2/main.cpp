@@ -11,7 +11,11 @@ int long_running_calculation(int input) {
     // for(int i = 0; i < input * 100; i++) {
     //     result += i;
     // }
-    std::this_thread::sleep_for(std::chrono::seconds(20));
+    // std::this_thread::sleep_for(std::chrono::seconds(20));
+    for(int i = 0; i < 30; i++) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::cout << "計算中... " << i << std::endl;
+    }
     return input * 2;
 }
 
@@ -21,17 +25,24 @@ int calc()
     return fut.get();
 }
 
-void async_calculation(int input, emscripten::val callback) {
-    // auto f = [&] {
-    //     std::future<int> fut = std::async(std::launch::async, long_running_calculation, input);
-    //     fut.wait();
-    //     int result = fut.get();
-    //     callback(result);
-    // };
-    std::future<int> fut = std::async(std::launch::async, long_running_calculation, input);
-    fut.wait();
-    int result = fut.get();
-    callback(result);
+int async_calculation(int input) {
+    std::promise<int> promise;
+    std::future<int> future = promise.get_future();
+
+
+    std::thread thread([&] {
+        int result = long_running_calculation(input);
+        promise.set_value(result);
+    });
+    thread.detach();
+    std::cout << "メインスレッド：他の処理を実行中..." << std::endl;
+    // check future is done
+    while (future.wait_for(std::chrono::seconds(0)) != std::future_status::ready) {
+        std::cout << "メインスレッド：他の処理を実行中..." << std::endl;
+        // std::this_thread::sleep_for(std::chrono::seconds(1));
+        emscripten_sleep(1000);
+    }
+    return future.get();
 }
 
 EMSCRIPTEN_BINDINGS(my_module) {
@@ -49,16 +60,10 @@ int main(int arg, char** argv){
 
   EM_ASM(
     console.log('hello world!, this is console.log from EM_ASM');
-
-    // Promiseラッパーを作成
-    const promiseCalculation = wrapAsyncCalculationWithPromise(Module.asyncCalculation);
-
-    promiseCalculation(100).then(
-        result => {
-            console.log('Calculation result:', result);
-    }).catch(
-        error => { console.error('Calculation error:', error);
-    });
+    (async () => {
+    const result = await Module.asyncCalculation(42);
+    console.log('result:', result);
+    })();
     setTimeout(() => {
         console.log('setTimeout');
     }, 1000);
