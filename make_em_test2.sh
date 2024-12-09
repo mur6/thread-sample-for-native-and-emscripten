@@ -1,7 +1,7 @@
 #!/bin/bash
 
 BUILD_DIR="build/em"
-PTHREAD_POOL_SIZE=8
+PTHREAD_POOL_SIZE=2
 
 clean() {
     rm -rf $BUILD_DIR
@@ -12,6 +12,7 @@ build() {
     emcc src/test2/main.cpp -pthread \
         --bind \
         --emrun \
+        --pre-js src/test2/pre.js \
         -s ASYNCIFY=1 \
         -s EXIT_RUNTIME=0 \
         -s PROXY_TO_PTHREAD=1 \

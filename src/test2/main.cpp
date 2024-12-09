@@ -8,7 +8,7 @@
 int long_running_calculation(int input) {
     // 重い計算をここで実行
     int result = 0;
-    for(int i = 0; i < input * 1000000; i++) {
+    for(int i = 0; i < input * 100; i++) {
         result += i;
     }
     return result;
@@ -48,8 +48,22 @@ int main(int arg, char** argv){
 
   EM_ASM(
     console.log('hello world!, this is console.log from EM_ASM');
-    Module.asyncCalculation(100).then(
-        result => { console.log('Calculation result:', result); }) .catch(error => { console.error('Calculation error:', error); });
+
+    // Promiseラッパーを作成
+    const promiseCalculation = wrapAsyncCalculationWithPromise(Module.asyncCalculation);
+
+    promiseCalculation(100).then(
+        result => {
+            console.log('Calculation result:', result);
+    }).catch(
+        error => { console.error('Calculation error:', error);
+    });
+    setTimeout(() => {
+        console.log('setTimeout');
+    }, 1000);
+    setInterval(() => {
+        console.log('setInterval');
+    }, 1000);
   );
   return 0;
 }
