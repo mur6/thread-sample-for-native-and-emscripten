@@ -10,6 +10,8 @@ clean() {
 build() {
     mkdir -p $BUILD_DIR
     emcc src/test2/main.cpp -pthread \
+        -g \
+        -gsource-map \
         --bind \
         --pre-js src/test2/pre.js \
         -s EXIT_RUNTIME=0 \

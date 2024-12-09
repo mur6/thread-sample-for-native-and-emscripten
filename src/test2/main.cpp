@@ -13,7 +13,9 @@ int long_running_calculation(int input) {
     // }
     // std::this_thread::sleep_for(std::chrono::seconds(20));
     for(int i = 0; i < 10; i++) {
+        // get thread id
         std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::cout << "Thread ID: " << std::this_thread::get_id() << std::endl;
         std::cout << "計算中... " << i << std::endl;
     }
     return input * 2;
@@ -38,6 +40,8 @@ int async_calculation(int input) {
     std::cout << "メインスレッド：他の処理を実行中..." << std::endl;
     // check future is done
     while (future.wait_for(std::chrono::seconds(0)) != std::future_status::ready) {
+        // get thread id
+        std::cout << "Thread ID: " << std::this_thread::get_id() << std::endl;
         std::cout << "メインスレッド：他の処理を実行中..." << std::endl;
         // std::this_thread::sleep_for(std::chrono::seconds(1));
         emscripten_sleep(1000);
