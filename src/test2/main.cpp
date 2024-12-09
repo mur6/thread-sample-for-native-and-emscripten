@@ -49,29 +49,29 @@ EMSCRIPTEN_BINDINGS(my_module) {
     emscripten::function("asyncCalculation", &async_calculation);
 }
 
-EMSCRIPTEN_KEEPALIVE
-int main(int arg, char** argv){
-    // print hello world
-    std::cout << "Hello World!" << std::endl;
-    std::cout << "This is a C++ program: argc=" << arg << std::endl;
-    for (int i = 0; i < arg; i++) {
-        std::cout << "argv[" << i << "]: " << argv[i] << std::endl;
-    }
+// EMSCRIPTEN_KEEPALIVE
+// int main(int arg, char** argv){
+//     // print hello world
+//     std::cout << "Hello World!" << std::endl;
+//     std::cout << "This is a C++ program: argc=" << arg << std::endl;
+//     for (int i = 0; i < arg; i++) {
+//         std::cout << "argv[" << i << "]: " << argv[i] << std::endl;
+//     }
 
-  EM_ASM(
-    console.log('hello world!, this is console.log from EM_ASM');
-    (async () => {
-    const result = await Module.asyncCalculation(42);
-    console.log('result:', result);
-    })();
-    setTimeout(() => {
-        console.log('setTimeout');
-    }, 1000);
-    setInterval(() => {
-        console.log('setInterval');
-    }, 1000);
-  );
+//   EM_ASM(
+//     console.log('hello world!, this is console.log from EM_ASM');
+//     (async () => {
+//     const result = await Module.asyncCalculation(42);
+//     console.log('result:', result);
+//     })();
+//     setTimeout(() => {
+//         console.log('setTimeout');
+//     }, 1000);
+//     setInterval(() => {
+//         console.log('setInterval');
+//     }, 1000);
+//   );
 
-  emscripten_exit_with_live_runtime();
-  return 0;
-}
+//   emscripten_exit_with_live_runtime();
+//   return 0;
+// }
