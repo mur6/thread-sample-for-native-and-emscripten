@@ -49,8 +49,15 @@ int async_calculation(int input) {
     return future.get();
 }
 
+
+int async_calculation2(int input) {
+    return long_running_calculation(input);
+}
+
+
 EMSCRIPTEN_BINDINGS(my_module) {
     emscripten::function("asyncCalculation", &async_calculation);
+    emscripten::function("async_calculation2", &async_calculation2);
 }
 
 // EMSCRIPTEN_KEEPALIVE
