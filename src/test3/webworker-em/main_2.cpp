@@ -16,6 +16,10 @@ emscripten::val run_heavy_computation() {
     std::promise<int> promise;
     std::future<int> future = promise.get_future();
     std::thread thread([&] {
+        // get thread id
+        auto worker_id = emscripten_wasm_worker_self_id();
+        std::cout << "Thread ID: " << std::this_thread::get_id() << std::endl;
+        std::cout << "Worker ID: " << worker_id << std::endl;
         int result = heavy_computation(40);
         promise.set_value(result);
     });
@@ -24,9 +28,9 @@ emscripten::val run_heavy_computation() {
     return emscripten::val::global("Promise").new_(
         [&](emscripten::val resolve, emscripten::val reject) mutable {
             try {
-                while(future.wait_for(std::chrono::seconds(0)) != std::future_status::ready) {
-                    emscripten_sleep(1000);
-                }
+                // while(future.wait_for(std::chrono::seconds(0)) != std::future_status::ready) {
+                //     emscripten_sleep(1000);
+                // }
                 resolve(42);
             } catch (...) {
                 reject(emscripten::val("Error"));
