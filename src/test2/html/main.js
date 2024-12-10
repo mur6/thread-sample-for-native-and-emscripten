@@ -79,8 +79,9 @@ const run = async () => {
         setInterval(() => {
             console.log('setInterval');
         }, 1000);
-        const result = await Module.asyncCalculation(42);
-        console.log('result:', result);
+        //const result = await Module.async_calculation2(42);
+        const result = await Module.getNumber();
+        console.log('getNumber result:', result);
         // ----------------- Init -----------------
         // document.getElementById('output').innerHTML += `<br>init start.`;
         // init(init_params, Module);

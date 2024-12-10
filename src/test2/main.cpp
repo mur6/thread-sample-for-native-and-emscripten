@@ -21,10 +21,22 @@ int long_running_calculation(int input) {
     return input * 2;
 }
 
-int calc()
-{
-    std::future<int> fut = std::async(std::launch::async, [] { return 42; });
-    return fut.get();
+// emscripten::val wait(int ms) {
+//     return emscripten::val::global("Promise").new_(
+//         emscripten::val::module_property("function")([ms](emscripten::val resolve) {
+//             emscripten::val::global("setTimeout").call<void>(
+//                 emscripten::val::module_property("function")([resolve, ms]() {
+//                     resolve(emscripten::val("Waited for " + std::to_string(ms) + " milliseconds"));
+//                 }),
+//                 ms
+//             );
+//         })
+//     );
+// }
+
+emscripten::val getNumber() {
+    // JavaScriptの Promise.resolve(42) を生成
+    return emscripten::val::global("Promise").call<emscripten::val>("resolve", 42);
 }
 
 int async_calculation(int input) {
@@ -56,8 +68,9 @@ int async_calculation2(int input) {
 
 
 EMSCRIPTEN_BINDINGS(my_module) {
-    emscripten::function("asyncCalculation", &async_calculation);
+    emscripten::function("async_calculation", &async_calculation);
     emscripten::function("async_calculation2", &async_calculation2);
+    emscripten::function("getNumber", &getNumber);
 }
 
 // EMSCRIPTEN_KEEPALIVE
