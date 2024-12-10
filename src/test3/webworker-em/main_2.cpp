@@ -13,8 +13,8 @@ int heavy_computation(int n) {
 // スレッドで実行されるタスク
 void thread_task(void* arg) {
     auto* promise_data = reinterpret_cast<std::promise<int>*>(arg);
-    int result = heavy_computation(40); // 計算の例 (フィボナッチ数)
-    promise_data->set_value(result);    // 結果を Promise に設定
+    int result = heavy_computation(40);
+    promise_data->set_value(result);
     delete promise_data;                // メモリを解放
 }
 
@@ -27,7 +27,7 @@ emscripten::val run_heavy_computation() {
     // スレッドにタスクを非同期でディスパッチ
     emscripten_dispatch_to_thread_async(
         emscripten_main_runtime_thread_id(), // スレッド ID
-        thread_task,                         // 実行する関数
+        &thread_task,                         // 実行する関数
         nullptr,                             // 完了コールバック（不要）
         reinterpret_cast<void*>(promise_data)
     );
