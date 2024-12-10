@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emscripten Co-await Prime Finder</title>
+</head>
+<body>
+    <h1>Prime Number Finder</h1>
+    <div>
+        <label>Start Range:</label>
+        <input type="number" id="startInput" value="1">
+        <label>End Range:</label>
+        <input type="number" id="endInput" value="10000">
+        <button id="do_find">Find Primes</button>
+    </div>
+    <div>
+        <h2>Results:</h2>
+        <pre id="results"></pre>
+    </div>
+
+
+    <!-- <script src="prime_finder.js"></script> -->
+    <script type="module">
+        // Load the Emscripten module
+        import loadWASM from './prime_finder.js';
+        const Module = await loadWASM();
+
+        async function findPrimes() {
+            const startInput = document.getElementById('startInput');
+            const endInput = document.getElementById('endInput');
+            const resultsDiv = document.getElementById('results');
+
+            const start = parseInt(startInput.value);
+            const end = parseInt(endInput.value);
+
+            console.time('Prime Finding');
+            try {
+                // Use the bound function from C++
+                const primesPtr = Module.runPrimeFinder(start, end);
+                
+                // Convert the typed array to a regular array
+                const primesArray = Array.from(primesPtr);
+                
+                console.timeEnd('Prime Finding');
+                
+                // Display results
+                resultsDiv.textContent = `Found ${primesArray.length} primes between ${start} and ${end}`;
+                console.log('Primes:', primesArray);
+            } catch (error) {
+                console.error('Error finding primes:', error);
+                resultsDiv.textContent = 'An error occurred';
+            }
+        }
+    
+        document.getElementById('do_find').addEventListener('click', findPrimes);
+    </script>
+</body>
+</html>
