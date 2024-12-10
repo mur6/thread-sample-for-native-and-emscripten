@@ -10,37 +10,29 @@ int heavy_computation(int n) {
     return heavy_computation(n - 1) + heavy_computation(n - 2);
 }
 
-// スレッドで実行されるタスク
-void thread_task(void* arg) {
-    auto* promise_data = reinterpret_cast<std::promise<int>*>(arg);
-    int result = heavy_computation(40);
-    promise_data->set_value(result);
-    delete promise_data;                // メモリを解放
-}
-
 // JavaScript から呼び出す関数
 emscripten::val run_heavy_computation() {
-    // Promise を作成
-    auto* promise_data = new std::promise<int>();
-    std::future<int> result = promise_data->get_future();
-
-    // スレッドにタスクを非同期でディスパッチ
-    emscripten_dispatch_to_thread_async(
-        emscripten_main_runtime_thread_id(), // スレッド ID
-        &thread_task,                         // 実行する関数
-        nullptr,                             // 完了コールバック（不要）
-        reinterpret_cast<void*>(promise_data)
-    );
-
+    // thread を使って計算を行う
+    std::promise<int> promise;
+    std::future<int> future = promise.get_future();
+    std::thread thread([&] {
+        int result = heavy_computation(40);
+        promise.set_value(result);
+    });
+    thread.detach();
     // JavaScript の Promise に変換して返す
     return emscripten::val::global("Promise").new_(
-        [promise_data = std::move(result)](emscripten::val resolve, emscripten::val reject) mutable {
+        [&](emscripten::val resolve, emscripten::val reject) mutable {
             try {
-                resolve(promise_data.get());
+                while(future.wait_for(std::chrono::seconds(0)) != std::future_status::ready) {
+                    emscripten_sleep(1000);
+                }
+                resolve(42);
             } catch (...) {
-                reject(emscripten::val("Error in thread task"));
+                reject(emscripten::val("Error"));
             }
-        });
+        }
+    );
 }
 
 // JavaScript にバインド

@@ -6,6 +6,9 @@ build() {
     emcc $HERE/main_2.cpp \
     -std=c++20 \
     -pthread \
+    -s PTHREAD_POOL_SIZE=2 \
+    -s USE_PTHREADS=1 \
+    -s PROXY_TO_PTHREAD=1 \
     -g \
     --bind \
     -s EXIT_RUNTIME=0 \

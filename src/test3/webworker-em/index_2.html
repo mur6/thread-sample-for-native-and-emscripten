@@ -24,7 +24,7 @@
         import loadWASM from './prime_finder.js';
         const Module = await loadWASM();
 
-        async function findPrimes() {
+        async function run() {
             const startInput = document.getElementById('startInput');
             const endInput = document.getElementById('endInput');
             const resultsDiv = document.getElementById('results');
@@ -35,23 +35,16 @@
             console.time('Prime Finding');
             try {
                 // Use the bound function from C++
-                const primesPtr = Module.runPrimeFinder(start, end);
-                
-                // Convert the typed array to a regular array
-                const primesArray = Array.from(primesPtr);
-                
-                console.timeEnd('Prime Finding');
-                
-                // Display results
-                resultsDiv.textContent = `Found ${primesArray.length} primes between ${start} and ${end}`;
-                console.log('Primes:', primesArray);
+                const r = await Module.runHeavyComputation();
+
+                console.log('result:', r);
             } catch (error) {
                 console.error('Error finding primes:', error);
                 resultsDiv.textContent = 'An error occurred';
             }
         }
     
-        document.getElementById('do_find').addEventListener('click', findPrimes);
+        run();
     </script>
 </body>
 </html>
