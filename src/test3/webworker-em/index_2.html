@@ -35,7 +35,7 @@
             console.time('Prime Finding');
             try {
                 // Use the bound function from C++
-                const r = await Module.runHeavyComputation();
+                const r = Module.runHeavyComputation();
 
                 console.log('result:', r);
             } catch (error) {
