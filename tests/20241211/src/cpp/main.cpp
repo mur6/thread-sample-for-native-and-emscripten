@@ -44,10 +44,18 @@ public:
 int main()
 {
 
-    std::array<int, 10000> ar;
+    std::array<int, 500> ar;
     std::iota(ar.begin(), ar.end(), 0); // initialize array with 0, 1, 2, ..., 9999
     std::shuffle(ar.begin(), ar.end(), std::mt19937{std::random_device{}()});
-
+    // print array. line feed after 50 elements
+    for (int i = 0; i < 500; ++i)
+    {
+        std::cout << ar[i] << " ";
+        if ((i + 1) % 50 == 0)
+        {
+            std::cout << std::endl;
+        }
+    }
 
     mt_queue q;
     // push
@@ -59,11 +67,11 @@ int main()
         for (int i : ar) {
             q.push(i);
             // sleep
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
     });
     std::thread t2([&q] {
-        for (int i = 0; i < 1000; ++i) {
+        for (int i = 0; i < 500; ++i) {
             int data = q.pop();
             std::cout << data << std::endl;
         }
