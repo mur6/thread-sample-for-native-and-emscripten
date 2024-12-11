@@ -9,7 +9,6 @@ build() {
     -s PTHREAD_POOL_SIZE=2 \
     -s PTHREAD_POOL_SIZE_STRICT=2 \
     -s USE_PTHREADS=1 \
-    -s WASM_WORKERS=1 \
     -s PROXY_TO_PTHREAD=1 \
     -g \
     --bind \
