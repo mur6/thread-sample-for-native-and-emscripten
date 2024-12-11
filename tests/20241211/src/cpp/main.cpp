@@ -3,6 +3,11 @@
 #include <mutex>
 #include <iostream>
 #include <thread>
+#include <array>
+#include <algorithm>
+#include <random>
+
+using namespace std::literals::chrono_literals;
 
 class mt_queue
 {
@@ -38,22 +43,30 @@ public:
 
 int main()
 {
+
+    std::array<int, 10000> ar;
+    std::iota(ar.begin(), ar.end(), 0); // initialize array with 0, 1, 2, ..., 9999
+    std::shuffle(ar.begin(), ar.end(), std::mt19937{std::random_device{}()});
+
+
     mt_queue q;
     // push
     q.push(123);
     // pop
     int data = q.pop();
     std::cout << data << std::endl;
-
-    std::thread t1([&q] {
-        q.push(1);
-        q.push(2);
-        q.push(3);
+    std::thread t1([&q, &ar] {
+        for (int i : ar) {
+            q.push(i);
+            // sleep
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
     });
     std::thread t2([&q] {
-        std::cout << q.pop() << std::endl;
-        std::cout << q.pop() << std::endl;
-        std::cout << q.pop() << std::endl;
+        for (int i = 0; i < 1000; ++i) {
+            int data = q.pop();
+            std::cout << data << std::endl;
+        }
     });
     t1.join();
     t2.join();
