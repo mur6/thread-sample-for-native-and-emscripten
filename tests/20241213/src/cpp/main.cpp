@@ -10,18 +10,23 @@
 
 using namespace std::literals::chrono_literals;
 
+std::mutex mtx;
+
 int main()
 {
     puts("Before the thread");
 
     // int arg = 42;
     std::vector<std::thread> threads;
-    int thread_count = 20;
+    int thread_count = 10;
     for (int i = 0; i < thread_count; i++)
     {
         threads.push_back(std::thread([i]() {
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-            std::cout << "Inside the thread: " << i << std::endl;
+            std::this_thread::sleep_for(1ms);
+            {
+                std::lock_guard<std::mutex> lock(mtx);
+                std::cout << "Inside the thread: " << i << std::endl;
+            }
         }));
     }
     // std::thread thread([&]() {
