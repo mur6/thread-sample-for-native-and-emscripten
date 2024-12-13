@@ -11,9 +11,17 @@ class WasmHandler(SimpleHTTPRequestHandler):
         SimpleHTTPRequestHandler.end_headers(self)
 
 
+# server http server on port 8000, given directory by argument
+def run_server(port, directory):
+    httpd = socketserver.TCPServer(("", port), WasmHandler)
+    httpd.serve_forever()
+    httpd.directory = directory
+    return httpd
+
+
 if __name__ == "__main__":
     PORT = 8080
-    with socketserver.TCPServer(("", PORT), WasmHandler) as httpd:
+    with run_server(PORT, ".") as httpd:
         print("Listening on port {}. Press Ctrl+C to stop.".format(PORT))
         try:
             httpd.serve_forever()
