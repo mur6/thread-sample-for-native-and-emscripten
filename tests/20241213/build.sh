@@ -26,3 +26,19 @@ run_em() {
     echo "Running..."
     # emrun --browser chrome $HERE/web/main.js
 }
+
+case $1 in
+    clean)
+        clean_em
+        ;;
+    build)
+        build_em
+        ;;
+    run)
+        run_em
+        ;;
+    *)
+        echo "Usage: $0 {clean|build|run}"
+        exit 1
+        ;;
+esac
