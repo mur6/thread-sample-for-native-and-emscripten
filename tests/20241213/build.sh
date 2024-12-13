@@ -19,7 +19,8 @@ build_em() {
     mkdir -p "BUILD_DIR"
     echo "BUILD_DIR=$BUILD_DIR"
     emcc $HERE/src/cpp/main.cpp -pthread \
-     -s MODULARIZE=1  -s EXPORT_ES6=1 -o $BUILD_DIR/main.js
+        -s PROXY_TO_PTHREAD \
+        -s MODULARIZE=1  -s EXPORT_ES6=1 -o $BUILD_DIR/main.js
 }
 
 run_em() {
