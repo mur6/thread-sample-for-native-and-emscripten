@@ -15,6 +15,7 @@ class WasmHandler(SimpleHTTPRequestHandler):
 # server http server on port 8000, given directory by argument
 def run_server(port, directory):
     httpd = socketserver.TCPServer(("", port), WasmHandler)
+    # set the directory to serve files from
     httpd.directory = directory
     with httpd:
         print(f"Serve files from directory {directory}")
@@ -29,7 +30,7 @@ def run_server(port, directory):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--port", type=int, default=8080)
+    parser.add_argument("--port", type=int, default=8088)
     parser.add_argument("--directory", type=str, default=".")
     args = parser.parse_args()
     run_server(args.port, args.directory)

@@ -25,6 +25,7 @@ run_em() {
     echo "DIR=$HERE"
     echo "Running..."
     # emrun --browser chrome $HERE/web/main.js
+    python3 $HERE/web/server.py --directory $HERE/web
 }
 
 case $1 in
