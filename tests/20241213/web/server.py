@@ -1,3 +1,4 @@
+import argparse
 import socketserver
 from http.server import SimpleHTTPRequestHandler
 
@@ -14,17 +15,21 @@ class WasmHandler(SimpleHTTPRequestHandler):
 # server http server on port 8000, given directory by argument
 def run_server(port, directory):
     httpd = socketserver.TCPServer(("", port), WasmHandler)
-    httpd.serve_forever()
     httpd.directory = directory
-    return httpd
-
-
-if __name__ == "__main__":
-    PORT = 8080
-    with run_server(PORT, ".") as httpd:
-        print("Listening on port {}. Press Ctrl+C to stop.".format(PORT))
+    with httpd:
+        print(f"Serve files from directory {directory}")
+        print(f"Listening on port {port}. Press Ctrl+C to stop.")
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
             pass
+        print("Server stopped.")
         httpd.server_close()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--port", type=int, default=8080)
+    parser.add_argument("--directory", type=str, default=".")
+    args = parser.parse_args()
+    run_server(args.port, args.directory)
