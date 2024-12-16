@@ -19,5 +19,25 @@ onmessage = function (e) {
     const result = doCalc();
     console.log(`calc result=${result}`);
     // 計算が完了したら結果をメインスレッドに送信
-    postMessage({ result });
+    postMessage({ result: 12 });
 };
+
+
+// onmessage = async function (e) {
+//     console.log("Message received from main script");
+//     const { funcId, input } = e.data;
+
+//     try {
+//         const Module = await loadWASM();
+//         console.log(Module);
+
+//         const result = await Module.calc();
+//         console.log(`calc result=${result}`);
+
+//         // Promiseではなく、実際の結果値を送信
+//         postMessage({ result });
+//     } catch (error) {
+//         console.error('Error in worker:', error);
+//         postMessage({ error: error.toString() });
+//     }
+// };
