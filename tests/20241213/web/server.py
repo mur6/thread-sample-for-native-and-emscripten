@@ -33,7 +33,7 @@ def run_server(port, directory):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--port", type=int, default=8088)
+    parser.add_argument("--port", type=int, default=8080)
     parser.add_argument("--directory", type=str, default=".")
     args = parser.parse_args()
     run_server(args.port, args.directory)
