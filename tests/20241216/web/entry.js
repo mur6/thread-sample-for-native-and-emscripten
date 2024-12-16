@@ -1,17 +1,18 @@
+const worker = new Worker("worker.js", { type: 'module' });
+
 function calculateInWorker(funcId, input) {
     return new Promise((resolve, reject) => {
-        const worker = new Worker("worker.js", { type: 'module' });
 
         // Workerが結果を送信したときにPromiseを解決
         worker.onmessage = (e) => {
             resolve(e.data.result);
-            worker.terminate(); // Workerを終了
+            // worker.terminate(); // Workerを終了
         };
 
         // Workerでエラーが発生したときにPromiseを拒否
         worker.onerror = (e) => {
             reject(new Error(`Worker error: ${e.message}`));
-            worker.terminate();
+            // worker.terminate();
         };
 
         // Workerにデータを送信
