@@ -18,11 +18,11 @@ int main()
 
     // int arg = 42;
     std::vector<std::thread> threads;
-    int thread_count = 20;
+    int thread_count = 10;
     for (int i = 0; i < thread_count; i++)
     {
         threads.push_back(std::thread([i]() {
-            std::this_thread::sleep_for(250ms);
+            std::this_thread::sleep_for(2ms);
             {
                 std::lock_guard<std::mutex> lock(mtx);
                 std::cout << "Inside the thread: " << i << std::endl;
