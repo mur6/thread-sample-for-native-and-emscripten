@@ -20,13 +20,21 @@ function calculateInWorker(funcId, input) {
     });
 }
 
-const run = () => {
-    setTimeout(async () => {
-        // const Module = await loadWASM();
-        console.log("calculateInWorker: start");
-        const result = await calculateInWorker(1, 10);
-        console.log("calculateInWorker: end", result);
-    }, 1000);
-};
+// const run = () => {
+//     setTimeout(async () => {
+//         // const Module = await loadWASM();
+//         console.log("calculateInWorker: start");
+//         const result = await calculateInWorker(1, 10);
+//         console.log("calculateInWorker: end", result);
+//     }, 1000);
+// };
 
-run();
+// run();
+
+// bind event to button, and write calc result to output div.
+document.getElementById("btn").addEventListener("click", async () => {
+    console.log("calculateInWorker: start");
+    const result = await calculateInWorker(1, 10);
+    console.log("calculateInWorker: end", result);
+    document.getElementById("output").textContent = result;
+});

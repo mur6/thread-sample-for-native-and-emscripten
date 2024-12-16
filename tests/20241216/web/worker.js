@@ -21,7 +21,7 @@ onmessage = async function (e) {
     const result = await Module.calc();
     console.log(`calc result=${result}`);
     // 計算が完了したら結果をメインスレッドに送信
-    postMessage({ result: 12 });
+    postMessage({ result: result });
 };
 
 
