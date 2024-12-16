@@ -1,5 +1,3 @@
-import loadWASM from '/dist/main.js';
-
 function calculateInWorker(funcId, input) {
     return new Promise((resolve, reject) => {
         const worker = new Worker("worker.js");
