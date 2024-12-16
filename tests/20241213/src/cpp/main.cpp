@@ -46,7 +46,7 @@ int main()
     puts("Before the thread");
 
     // int arg = 42;
-    std::vector<int> thread_nums = {5, 9, 10, 8, 9, 7, 10};
+    std::vector<int> thread_nums = {5, 9, 10, 8, 9, 11, 10};
     int thread_try_count = thread_nums.size();
     for (int i = 0; i < thread_try_count; i++)
     {
