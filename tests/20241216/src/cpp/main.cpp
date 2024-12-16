@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <random>
 #include <emscripten.h>
+#include <emscripten/bind.h>
 
 using namespace std::literals::chrono_literals;
 
@@ -40,20 +41,29 @@ void create_and_join_threads(int try_index, int thread_num) {
     // }
 }
 
-
-int main()
+int calc(std::vector<int> &thread_nums)
 {
-    puts("Before the thread");
-
-    // int arg = 42;
-    std::vector<int> thread_nums = {5, 9, 10, 8, 9, 11, 10};
+    // std::vector<int> thread_nums = {1, 2, 3, 4, 5};
     int thread_try_count = thread_nums.size();
     for (int i = 0; i < thread_try_count; i++)
     {
         create_and_join_threads(i, thread_nums[i]);
     }
-    std::cout << "After the thread" << std::endl;
+    int answer = 42;
+    return answer;
+}
 
-    emscripten_exit_with_live_runtime(); // スレッドを使うときは、大事っぽい。
-    return 0;
+// int main()
+// {
+//     puts("Before the thread");
+//     std::vector<int> thread_nums = {1, 2, 3, 4, 5};
+//     int answer = calc(thread_nums);
+//     std::cout << "After the thread" << std::endl;
+//     emscripten_exit_with_live_runtime(); // スレッドを使うときは、大事っぽい。
+//     return 0;
+// }
+
+EMSCRIPTEN_BINDINGS(my_module)
+{
+    emscripten::function("calc", &calc);
 }
