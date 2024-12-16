@@ -41,9 +41,9 @@ void create_and_join_threads(int try_index, int thread_num) {
     // }
 }
 
-int calc(std::vector<int> &thread_nums)
+int calc()
 {
-    // std::vector<int> thread_nums = {1, 2, 3, 4, 5};
+    std::vector<int> thread_nums = {1, 2, 3, 4, 5};
     int thread_try_count = thread_nums.size();
     for (int i = 0; i < thread_try_count; i++)
     {
@@ -65,5 +65,6 @@ int calc(std::vector<int> &thread_nums)
 
 EMSCRIPTEN_BINDINGS(my_module)
 {
+    emscripten::register_vector<int>("VectorInt");
     emscripten::function("calc", &calc);
 }
