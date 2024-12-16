@@ -1,6 +1,6 @@
 function calculateInWorker(funcId, input) {
     return new Promise((resolve, reject) => {
-        const worker = new Worker("worker.js");
+        const worker = new Worker("worker.js", { type: 'module' });
 
         // Workerが結果を送信したときにPromiseを解決
         worker.onmessage = (e) => {
