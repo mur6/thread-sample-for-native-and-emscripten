@@ -41,6 +41,8 @@ void create_and_join_threads(int try_index, int thread_num) {
     // }
 }
 
+static int answer_s = 0;
+
 int calc()
 {
     std::vector<int> thread_nums = {1, 2, 3, 4, 5};
@@ -49,8 +51,8 @@ int calc()
     {
         create_and_join_threads(i, thread_nums[i]);
     }
-    int answer = 42;
-    return answer;
+    answer_s++;
+    return answer_s;
 }
 
 // int main()
