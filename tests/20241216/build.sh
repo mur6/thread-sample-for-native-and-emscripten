@@ -18,7 +18,9 @@ build_em() {
     echo "Building..."
     mkdir -p "BUILD_DIR"
     echo "BUILD_DIR=$BUILD_DIR"
-    emcc $HERE/src/cpp/main.cpp -pthread \
+    emcc $HERE/src/cpp/main.cpp \
+        -pthread \
+        --bind \
         -sPTHREAD_POOL_SIZE=10 \
         -s MODULARIZE=1 \
         -s EXPORT_ES6=1 -o $BUILD_DIR/main.js
