@@ -6,8 +6,7 @@
 #include <array>
 #include <algorithm>
 #include <random>
-#include <fmt/ranges.h>
-#include <fmt/core.h>
+#include <format>
 
 #include <emscripten.h>
 #include <emscripten/bind.h>
@@ -45,7 +44,7 @@ void create_and_join_threads(int try_index, int thread_num)
     // }
 }
 
-static vector<int> s_nums;
+static std::vector<int> s_nums;
 
 std::vector<int> convertJSArrayToVector(const emscripten::val &jsArray)
 {
@@ -64,11 +63,11 @@ int appendAndSumOfAll(const std::vector<int> &numbers)
 {
     // append to the global vector
     s_nums.insert(s_nums.end(), numbers.begin(), numbers.end());
-    // print vector in c++23
-    fmt::print("s_nums: {}\n", s_nums);
+    // print vector in c++20
+    std::cout << std::format("s_nums: {}\n", s_nums) << std::endl;
     // return sum of the vector
     int sum = std::accumulate(s_nums.begin(), s_nums.end(), 0);
-    fmt::print("sum: {}\n", sum);
+    std::cout << std::format("sum: {}\n", sum) << std::endl;
     return sum;
 }
 
@@ -80,8 +79,8 @@ int calc()
     {
         create_and_join_threads(i, thread_nums[i]);
     }
-    answer_s++;
-    return answer_s;
+    int sum = std::accumulate(s_nums.begin(), s_nums.end(), 0);
+    return sum;
 }
 
 // int main()
