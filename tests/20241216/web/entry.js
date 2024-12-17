@@ -1,4 +1,4 @@
-const worker = new Worker("worker.js", { type: 'module' });
+var worker = new Worker("worker.js", { type: 'module' });
 
 function calculateInWorker(funcId, input) {
     return new Promise((resolve, reject) => {
@@ -41,5 +41,11 @@ document.getElementById("btn").addEventListener("click", async () => {
 
 document.getElementById("term-worker").addEventListener("click", async () => {
     worker.terminate();
+    worker = null;
     console.log("worker terminated");
+});
+
+document.getElementById("recreate-worker").addEventListener("click", async () => {
+    worker = new Worker("worker.js", { type: 'module' });
+    console.log("worker recreated");
 });
