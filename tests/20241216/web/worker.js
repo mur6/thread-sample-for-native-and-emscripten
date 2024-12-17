@@ -11,7 +11,9 @@ let Module = null;
 
 onmessage = async function (e) {
     console.log("Message received from main script");
-    const { funcId, input } = e.data;
+    const { funcName, input } = e.data;
+    console.log(`recieved: funcName=${funcName}`);
+    console.log(`recieved: e.data=${e.data}`);
     const workerResult = `recieved: e.data=${e.data}`;
     //const doCalc = (async () => {
     if (!Module) {

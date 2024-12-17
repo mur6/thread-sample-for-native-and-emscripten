@@ -32,7 +32,7 @@ function calculateInWorker(funcId, input) {
 // run();
 
 // bind event to button, and write calc result to output div.
-document.getElementById("btn").addEventListener("click", async () => {
+document.getElementById("store-nums").addEventListener("click", async () => {
     console.log("calculateInWorker: start");
     const result = await calculateInWorker(1, 10);
     console.log("calculateInWorker: end", result);
@@ -49,3 +49,7 @@ document.getElementById("recreate-worker").addEventListener("click", async () =>
     worker = new Worker("worker.js", { type: 'module' });
     console.log("worker recreated");
 });
+/* <button id="store-nums">数列をストアする</button>
+<button id="heavy-calc">ストアされた数列の合計値で、フィボナッチ数を計算する</button>
+<button id="term-worker">workerを削除</button>
+<button id="recreate-worker">workerを再生成</button> */
