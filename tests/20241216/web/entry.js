@@ -38,3 +38,8 @@ document.getElementById("btn").addEventListener("click", async () => {
     console.log("calculateInWorker: end", result);
     document.getElementById("output").textContent = result;
 });
+
+document.getElementById("term-worker").addEventListener("click", async () => {
+    worker.terminate();
+    console.log("worker terminated");
+});
