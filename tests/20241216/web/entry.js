@@ -38,10 +38,20 @@ async function sendToWorker(funcName, input) {
     return result;
 }
 
+async function appendAndSumOfAll(n) {
+    const result = await sendToWorker("appendAndSumOfAll", [1, 2, 3, 4, 5]);
+    return result;
+}
+
+async function heavyCalc() {
+    const result = await sendToWorker("heavyCalc", []);
+    return result;
+}
+
 // bind event to button, and write calc result to output div.
 document.getElementById("store-nums").addEventListener("click", async () => {
-
-    document.getElementById("output").textContent = result;
+    const result = await sendToWorker("appendAndSumOfAll", [1, 2, 3, 4, 5]);
+    document.getElementById("output-sum").textContent = result;
 });
 
 document.getElementById("term-worker").addEventListener("click", async () => {
@@ -58,3 +68,8 @@ document.getElementById("recreate-worker").addEventListener("click", async () =>
 <button id="heavy-calc">ストアされた数列の合計値で、フィボナッチ数を計算する</button>
 <button id="term-worker">workerを削除</button>
 <button id="recreate-worker">workerを再生成</button> */
+
+document.getElementById("heavy-calc").addEventListener("click", async () => {
+    const result = await heavyCalc();
+    document.getElementById("output-fib").textContent = result;
+});

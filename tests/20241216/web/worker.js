@@ -20,15 +20,15 @@ onmessage = async function (e) {
     }
 
     if (funcName === "appendAndSumOfAll") {
-        const inputNums = [1, 2, 3, 4, 5];
+        const inputNums = e.data;
         console.log(`inputNums=${inputNums}`);
         const vectorInt = await Module.convertJSArrayToVector(inputNums);
         console.log(`vectorInt=${vectorInt}`);
         const result = Module.appendAndSumOfAll(vectorInt);
-        postMessage({ result });
+        postMessage({ result: result });
     } else if (funcName === "heavyCalc") {
         const result = await Module.heavyCalc();
-        postMessage({ result });
+        postMessage({ result: result });
     } else {
         postMessage({ error: `unknown funcName=${funcName}` });
     }
