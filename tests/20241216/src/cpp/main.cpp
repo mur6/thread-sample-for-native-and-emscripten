@@ -43,6 +43,14 @@ void create_and_join_threads(int try_index, int thread_num) {
 
 static int answer_s = 0;
 
+void processIntArray(const std::vector<int>& numbers) {
+    int sum = 0;
+    for (int num : numbers) {
+        sum += num;
+    }
+    std::cout << "sum: " << sum << std::endl;
+}
+
 int calc()
 {
     std::vector<int> thread_nums = {1, 2, 3, 4, 5};
@@ -69,4 +77,5 @@ EMSCRIPTEN_BINDINGS(my_module)
 {
     emscripten::register_vector<int>("VectorInt");
     emscripten::function("calc", &calc);
+    emscripten::function("processIntArray", &processIntArray);
 }
