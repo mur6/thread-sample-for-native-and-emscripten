@@ -16,7 +16,7 @@ function _sendToWorker(funcName, input) {
         };
 
         // Workerにデータを送信
-        worker.postMessage({ funcId, input });
+        worker.postMessage({ funcName, input });
     });
 }
 
@@ -33,6 +33,7 @@ function _sendToWorker(funcName, input) {
 
 async function sendToWorker(funcName, input) {
     console.log("sendToWorker: start");
+    console.log(`sendToWorker: funcName=${funcName}, input=${input}`);
     const result = await _sendToWorker(funcName, input);
     console.log("sendToWorker: end", result);
     return result;

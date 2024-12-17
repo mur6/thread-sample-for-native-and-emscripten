@@ -88,7 +88,7 @@ int heavy_computation(int n) {
     return heavy_computation(n - 1) + heavy_computation(n - 2);
 }
 
-void do_heavy_computation_using_stored_num() {
+int do_heavy_computation_using_stored_num() {
     int sum = std::accumulate(s_nums.begin(), s_nums.end(), 0);
     std::cout << "do_heavy_computation_using_stored_num: sum=" << sum << std::endl;
     return heavy_computation(n);
