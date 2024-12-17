@@ -14,18 +14,24 @@ onmessage = async function (e) {
     const { funcName, input } = e.data;
     console.log(`recieved: funcName=${funcName}`);
     console.log(`recieved: e.data=${e.data}`);
-    const workerResult = `recieved: e.data=${e.data}`;
-    //const doCalc = (async () => {
+
     if (!Module) {
         Module = await loadWASM();
     }
-    console.log(Module);
-    const inputNums = [1, 2, 3, 4, 5];
-    console.log(`inputNums=${inputNums}`);
-    const vectorInt = await Module.convertJSArrayToVector(inputNums);
-    console.log(`vectorInt=${vectorInt}`);
-    const result = Module.appendAndSumOfAll(vectorInt);
-    postMessage({ result: result });
+
+    if (funcName === "appendAndSumOfAll") {
+        const inputNums = [1, 2, 3, 4, 5];
+        console.log(`inputNums=${inputNums}`);
+        const vectorInt = await Module.convertJSArrayToVector(inputNums);
+        console.log(`vectorInt=${vectorInt}`);
+        const result = Module.appendAndSumOfAll(vectorInt);
+        postMessage({ result });
+    } else if (funcName === "heavyCalc") {
+        const result = await Module.heavyCalc();
+        postMessage({ result });
+    } else {
+        postMessage({ error: `unknown funcName=${funcName}` });
+    }
 };
 
 

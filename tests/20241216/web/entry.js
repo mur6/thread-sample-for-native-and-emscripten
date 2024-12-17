@@ -1,6 +1,6 @@
 var worker = new Worker("worker.js", { type: 'module' });
 
-function calculateInWorker(funcId, input) {
+function _sendToWorker(funcName, input) {
     return new Promise((resolve, reject) => {
 
         // Workerが結果を送信したときにPromiseを解決
@@ -31,11 +31,16 @@ function calculateInWorker(funcId, input) {
 
 // run();
 
+async function sendToWorker(funcName, input) {
+    console.log("sendToWorker: start");
+    const result = await _sendToWorker(funcName, input);
+    console.log("sendToWorker: end", result);
+    return result;
+}
+
 // bind event to button, and write calc result to output div.
 document.getElementById("store-nums").addEventListener("click", async () => {
-    console.log("calculateInWorker: start");
-    const result = await calculateInWorker(1, 10);
-    console.log("calculateInWorker: end", result);
+
     document.getElementById("output").textContent = result;
 });
 
