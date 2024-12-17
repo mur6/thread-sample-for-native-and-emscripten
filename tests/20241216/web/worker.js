@@ -18,7 +18,11 @@ onmessage = async function (e) {
         Module = await loadWASM();
     }
     console.log(Module);
-    const result = await Module.processIntArray([1, 2, 3, 4, 5]);
+    const inputNums = [1, 2, 3, 4, 5];
+    console.log(`inputNums=${inputNums}`);
+    const vectorInt = await Module.convertJSArrayToVector(inputNums);
+    console.log(`vectorInt=${vectorInt}`);
+    Module.processIntArray(vectorInt);
     postMessage({ result: 0 });
 };
 
