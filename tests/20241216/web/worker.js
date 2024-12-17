@@ -13,14 +13,14 @@ onmessage = async function (e) {
     console.log("Message received from main script");
     const { funcName, input } = e.data;
     console.log(`recieved: funcName=${funcName}`);
-    console.log(`recieved: e.data=${e.data}`);
+    console.log(`recieved: input=${input}`);
 
     if (!Module) {
         Module = await loadWASM();
     }
 
     if (funcName === "appendAndSumOfAll") {
-        const inputNums = e.data;
+        const inputNums = input;
         console.log(`inputNums=${inputNums}`);
         const vectorInt = await Module.convertJSArrayToVector(inputNums);
         console.log(`vectorInt=${vectorInt}`);
