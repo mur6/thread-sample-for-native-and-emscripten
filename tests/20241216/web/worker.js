@@ -18,10 +18,8 @@ onmessage = async function (e) {
         Module = await loadWASM();
     }
     console.log(Module);
-    const result = await Module.calc();
-    console.log(`calc result=${result}`);
-    // 計算が完了したら結果をメインスレッドに送信
-    postMessage({ result: result });
+    const result = await Module.processIntArray([1, 2, 3, 4, 5]);
+    postMessage({ result: 0 });
 };
 
 
