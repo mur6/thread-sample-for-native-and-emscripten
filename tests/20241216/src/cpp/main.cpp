@@ -71,7 +71,7 @@ int appendAndSumOfAll(const std::vector<int> &numbers)
     return sum;
 }
 
-int calc()
+int useManyThreads()
 {
     std::vector<int> thread_nums = {1, 2, 3, 4, 5};
     int thread_try_count = thread_nums.size();
@@ -81,6 +81,17 @@ int calc()
     }
     int sum = std::accumulate(s_nums.begin(), s_nums.end(), 0);
     return sum;
+}
+
+int heavy_computation(int n) {
+    if (n <= 1) return n;
+    return heavy_computation(n - 1) + heavy_computation(n - 2);
+}
+
+void do_heavy_computation_using_stored_num() {
+    int sum = std::accumulate(s_nums.begin(), s_nums.end(), 0);
+    std::cout << "do_heavy_computation_using_stored_num: sum=" << sum << std::endl;
+    return heavy_computation(n);
 }
 
 // int main()
@@ -96,7 +107,7 @@ int calc()
 EMSCRIPTEN_BINDINGS(my_module)
 {
     emscripten::register_vector<int>("VectorInt");
-    emscripten::function("calc", &calc);
+    emscripten::function("heavyCalc", &do_heavy_computation_using_stored_num);
     emscripten::function("convertJSArrayToVector", &convertJSArrayToVector);
     emscripten::function("appendAndSumOfAll", &appendAndSumOfAll);
 }
