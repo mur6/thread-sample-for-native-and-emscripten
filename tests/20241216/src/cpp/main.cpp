@@ -6,6 +6,9 @@
 #include <array>
 #include <algorithm>
 #include <random>
+#include <fmt/ranges.h>
+#include <fmt/core.h>
+
 #include <emscripten.h>
 #include <emscripten/bind.h>
 
@@ -42,7 +45,7 @@ void create_and_join_threads(int try_index, int thread_num)
     // }
 }
 
-static int answer_s = 0;
+static vector<int> s_nums;
 
 std::vector<int> convertJSArrayToVector(const emscripten::val &jsArray)
 {
@@ -57,14 +60,16 @@ std::vector<int> convertJSArrayToVector(const emscripten::val &jsArray)
     return numbers;
 }
 
-void processIntArray(const std::vector<int> &numbers)
+int appendAndSumOfAll(const std::vector<int> &numbers)
 {
-    int sum = 0;
-    for (int num : numbers)
-    {
-        sum += num;
-    }
-    std::cout << "sum: " << sum << std::endl;
+    // append to the global vector
+    s_nums.insert(s_nums.end(), numbers.begin(), numbers.end());
+    // print vector in c++23
+    fmt::print("s_nums: {}\n", s_nums);
+    // return sum of the vector
+    int sum = std::accumulate(s_nums.begin(), s_nums.end(), 0);
+    fmt::print("sum: {}\n", sum);
+    return sum;
 }
 
 int calc()
@@ -94,5 +99,5 @@ EMSCRIPTEN_BINDINGS(my_module)
     emscripten::register_vector<int>("VectorInt");
     emscripten::function("calc", &calc);
     emscripten::function("convertJSArrayToVector", &convertJSArrayToVector);
-    emscripten::function("processIntArray", &processIntArray);
+    emscripten::function("appendAndSumOfAll", &appendAndSumOfAll);
 }

@@ -22,8 +22,8 @@ onmessage = async function (e) {
     console.log(`inputNums=${inputNums}`);
     const vectorInt = await Module.convertJSArrayToVector(inputNums);
     console.log(`vectorInt=${vectorInt}`);
-    Module.processIntArray(vectorInt);
-    postMessage({ result: 0 });
+    const result = Module.appendAndSumOfAll(vectorInt);
+    postMessage({ result: result });
 };
 
 

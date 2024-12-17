@@ -19,6 +19,7 @@ build_em() {
     mkdir -p "BUILD_DIR"
     echo "BUILD_DIR=$BUILD_DIR"
     emcc $HERE/src/cpp/main.cpp \
+        -std=c++23 \
         -pthread \
         --bind \
         -sPTHREAD_POOL_SIZE=10 \
