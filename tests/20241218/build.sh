@@ -14,7 +14,7 @@ clean_em() {
 }
 
 build_em() {
-    PROG_NAME="super_simple"
+    PROG_NAME=$1
     echo "DIR=$HERE"
     echo "PROG_NAME=$PROG_NAME"
     echo "Building..."
@@ -25,7 +25,7 @@ build_em() {
         -s MODULARIZE=1 \
         -s EXPORT_ES6=1 \
         -g \
-        -o "$BUILD_DIR/$PROG_NAME".js
+        -o "$BUILD_DIR/$PROG_NAME".html
 }
 
 run_em() {
@@ -40,7 +40,12 @@ case $1 in
         clean_em
         ;;
     build)
-        build_em
+        # assert $2 is in (super_simple or em_filesystem), and call build_em with $2
+        if [ "$2" != "super_simple" ] && [ "$2" != "em_filesystem" ]; then
+            echo "Usage: $0 build {super_simple|em_filesystem}"
+            exit 1
+        fi
+        build_em $2
         ;;
     run)
         run_em
