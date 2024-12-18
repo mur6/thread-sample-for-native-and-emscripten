@@ -32,13 +32,25 @@ void start_calculation() {
     emscripten_set_main_loop(main_loop, 5, 1);
 }
 
+int get_calculation_result() {
+    return result.load();
+}
+
 EMSCRIPTEN_BINDINGS(module) {
     emscripten::function("startCalculation", &start_calculation);
+    emscripten::function("getCalculationResult", &get_calculation_result);
 }
 
 int main() {
     EM_ASM(
         console.log('WASM module loaded');
         Module.startCalculation();
+        const interval = setInterval(() => {
+            const result = Module.getCalculationResult();
+            if (result !== 0) {
+                console.log('Calculation result:', result);
+                clearInterval(interval);
+            }
+        }, 1000);
     );
 }
