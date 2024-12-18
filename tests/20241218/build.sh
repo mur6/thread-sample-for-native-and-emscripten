@@ -27,6 +27,7 @@ build_em() {
         -g \
         -pthread \
         -sPTHREAD_POOL_SIZE=0 \
+        --bind \
         -o "$BUILD_DIR/$PROG_NAME".html
 }
 
