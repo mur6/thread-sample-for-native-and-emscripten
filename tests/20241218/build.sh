@@ -14,17 +14,16 @@ clean_em() {
 }
 
 build_em() {
+    PROG_NAME="super_simple"
     echo "DIR=$HERE"
     echo "Building..."
     mkdir -p "BUILD_DIR"
     echo "BUILD_DIR=$BUILD_DIR"
-    emcc $HERE/src/cpp/main.cpp \
+    emcc "$HERE/src/$PROG_NAME.cpp" \
         -std=c++23 \
-        -pthread \
-        --bind \
-        -sPTHREAD_POOL_SIZE=10 \
         -s MODULARIZE=1 \
-        -s EXPORT_ES6=1 -o $BUILD_DIR/main.js
+        -s EXPORT_ES6=1 \
+        -o "$BUILD_DIR/$PROG_NAME".js
 }
 
 run_em() {
