@@ -26,7 +26,8 @@ build_em() {
         -s EXPORT_ES6=1 \
         -g \
         -pthread \
-        -sPTHREAD_POOL_SIZE=0 \
+        -sPTHREAD_POOL_SIZE=1 \
+        -fwasm-exceptions \
         --bind \
         -o "$BUILD_DIR/$PROG_NAME".html
 }
