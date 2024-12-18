@@ -9,8 +9,15 @@
 std::atomic<bool> calculation_complete(false);
 std::atomic<int> result(0);
 
+// メモリのオフセット位置を取得
+extern "C" {
+    int get_calculation_complete_address() {
+        return reinterpret_cast<int>(&calculation_complete);
+    }
+}
+
 void heavy_calculation() {
-    // 重い計算をシミュレート
+    calculation_complete.store(false);
     std::this_thread::sleep_for(std::chrono::seconds(7));
     result.store(42);  // 計算結果をセット
     calculation_complete.store(true);
