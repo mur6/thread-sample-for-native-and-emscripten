@@ -25,6 +25,8 @@ build_em() {
         -s MODULARIZE=1 \
         -s EXPORT_ES6=1 \
         -g \
+        -pthread \
+        -sPTHREAD_POOL_SIZE=0 \
         -o "$BUILD_DIR/$PROG_NAME".html
 }
 
@@ -40,9 +42,9 @@ case $1 in
         clean_em
         ;;
     build)
-        # assert $2 is in (super_simple or em_filesystem), and call build_em with $2
-        if [ "$2" != "super_simple" ] && [ "$2" != "em_filesystem" ]; then
-            echo "Usage: $0 build {super_simple|em_filesystem}"
+        # assert $2 is in (super_simple or em_filesystem or em_thread_and_event_loop), and call build_em with $2
+        if [ "$2" != "super_simple" ] && [ "$2" != "em_filesystem" ] && [ "$2" != "em_thread_and_event_loop" ]; then
+            echo "Usage: $0 build {super_simple|em_filesystem|em_thread_and_event_loop}"
             exit 1
         fi
         build_em $2
