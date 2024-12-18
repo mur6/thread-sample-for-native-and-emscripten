@@ -25,9 +25,7 @@ void heavy_calculation() {
 
 void start_calculation() {
     calculation_complete.store(false);
-    emscripten_async_call([](void* arg) {
-        heavy_calculation();
-    }, nullptr, 500);
+    std::thread(heavy_calculation).detach();
 }
 
 int get_calculation_result() {

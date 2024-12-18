@@ -16,6 +16,9 @@ const calcAsync = async (Module) => {
                 console.log('Calculation result:', result);
                 clearInterval(interval);
                 resolve(result);
+            } else {
+                const unfinishedResult = Module.getCalculationResult();
+                console.log(`unfinishedResult=${unfinishedResult}`);
             }
         }, 1000);
     });
@@ -29,6 +32,7 @@ const run = async () => {
         console.log("Module.startCalculation(): start");
         const result = await calcAsync(Module);
         console.log(`Module.startCalculation(): end, result=${result}`);
+        document.getElementById("output-result").innerText = result;
 
         // const interval = setInterval(() => {
         //     console.log('interval test.');
@@ -52,3 +56,10 @@ const run = async () => {
 }
 
 run();
+
+let counter = 0;
+document.getElementById("increment").addEventListener("click", () => {
+    // <p id="output-counter">0</p>
+    counter++;
+    document.getElementById("output-counter").innerText = counter;
+});
