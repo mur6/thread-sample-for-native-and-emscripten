@@ -18,14 +18,16 @@ extern "C" {
 
 void heavy_calculation() {
     calculation_complete.store(false);
-    std::this_thread::sleep_for(std::chrono::seconds(3));
+    std::this_thread::sleep_for(std::chrono::seconds(30));
     result.store(42);  // 計算結果をセット
     calculation_complete.store(true);
 }
 
 void start_calculation() {
     calculation_complete.store(false);
-    std::thread(heavy_calculation).detach();
+    emscripten_async_call([](void* arg) {
+        heavy_calculation();
+    }, nullptr, 500);
 }
 
 int get_calculation_result() {
