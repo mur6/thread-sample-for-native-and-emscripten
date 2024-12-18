@@ -16,6 +16,7 @@ clean_em() {
 build_em() {
     PROG_NAME="super_simple"
     echo "DIR=$HERE"
+    echo "PROG_NAME=$PROG_NAME"
     echo "Building..."
     mkdir -p "BUILD_DIR"
     echo "BUILD_DIR=$BUILD_DIR"
