@@ -18,12 +18,13 @@ build_em() {
     echo "DIR=$HERE"
     echo "PROG_NAME=$PROG_NAME"
     echo "Building..."
-    mkdir -p "BUILD_DIR"
+    mkdir -p "$BUILD_DIR"
     echo "BUILD_DIR=$BUILD_DIR"
     emcc "$HERE/src/$PROG_NAME.cpp" \
         -std=c++23 \
         -s MODULARIZE=1 \
         -s EXPORT_ES6=1 \
+        -g \
         -o "$BUILD_DIR/$PROG_NAME".js
 }
 
