@@ -23,20 +23,9 @@ void heavy_calculation() {
     calculation_complete.store(true);
 }
 
-void main_loop() {
-    if (calculation_complete.load()) {
-        printf("Calculation completed. Result: %d\n", result.load());
-        emscripten_cancel_main_loop();
-    } else {
-        auto now = std::chrono::system_clock::now();
-        std::cout << "Main loop running at " << std::chrono::system_clock::to_time_t(now) << std::endl;
-    }
-}
-
 void start_calculation() {
     calculation_complete.store(false);
     std::thread(heavy_calculation).detach();
-    // emscripten_set_main_loop(main_loop, 5, 1);
 }
 
 int get_calculation_result() {
