@@ -37,32 +37,23 @@ int main2()
     }, myStruct.getNum());
     return 0;
 }
-
 void main_loop_fps_1() {
-    // ここにメインループの処理を記述
-    // この関数は毎フレーム呼び出される
-    // この関数内で重い処理を行うと、ブラウザがフリーズするので注意
-    // また、この関数内でエラーが発生すると、ループが停止するので注意
-    // この関数内でエラーが発生しても、エラーがコンソールに表示されないので注意
-    // エラーが発生した場合は、この関数内でデバッガを使ってエラーを解決する
     std::cout << "fps=1" << std::endl;
+    emscripten_async_call([](void*){
+        main_loop_fps_1();
+    }, nullptr, 1000); // 1秒ごとに呼び出し
 }
 
 void main_loop_fps_2() {
-    // ここにメインループの処理を記述
-    // この関数は毎フレーム呼び出される
-    // この関数内で重い処理を行うと、ブラウザがフリーズするので注意
-    // また、この関数内でエラーが発生すると、ループが停止するので注意
-    // この関数内でエラーが発生しても、エラーがコンソールに表示されないので注意
-    // エラーが発生した場合は、この関数内でデバッガを使ってエラーを解決する
     std::cout << "fps=2" << std::endl;
+    emscripten_async_call([](void*){
+        main_loop_fps_2();
+    }, nullptr, 500); // 0.5秒ごとに呼び出し
 }
 
 int main() {
-    // 初期化処理
-
-    emscripten_set_main_loop(main_loop_fps_1, 1, 1);
-    emscripten_set_main_loop(main_loop_fps_2, 2, 1);
-
+    main_loop_fps_1();
+    main_loop_fps_2();
+    emscripten_exit_with_live_runtime(); // ランタイムを継続させる
     return 0;
 }
