@@ -28,10 +28,11 @@ build_em() {
         -pthread \
         -sPTHREAD_POOL_SIZE=1 \
         -fwasm-exceptions \
+        -sENVIRONMENT=web,worker \
         --preload-file assets@/assets \
         --use-preload-plugins \
         --bind \
-        -o "$BUILD_DIR/$PROG_NAME".html
+        -o "$BUILD_DIR/$PROG_NAME".js
 }
 
 run_em() {
