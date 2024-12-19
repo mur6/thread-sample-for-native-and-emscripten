@@ -28,6 +28,8 @@ build_em() {
         -pthread \
         -sPTHREAD_POOL_SIZE=1 \
         -fwasm-exceptions \
+        --preload-file assets@/assets \
+        --use-preload-plugins \
         --bind \
         -o "$BUILD_DIR/$PROG_NAME".html
 }

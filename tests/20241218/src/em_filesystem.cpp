@@ -1,6 +1,7 @@
 #include <mutex>
 #include <thread>
 #include <iostream>
+#include <filesystem>
 #include <emscripten.h>
 
 struct MyStruct
@@ -52,8 +53,17 @@ void main_loop_fps_2() {
 }
 
 int main() {
-    main_loop_fps_1();
-    main_loop_fps_2();
-    emscripten_exit_with_live_runtime(); // ランタイムを継続させる
+    EM_ASM(
+        console.log('filesystem test');
+    );
+    std::vector<std::string> filenames;
+    for (const auto & entry : std::filesystem::directory_iterator("/assets")) {
+        filenames.push_back(entry.path().string());
+    }
+    for (const auto & filename : filenames) {
+        EM_ASM_({
+            console.log('filename: ' + UTF8ToString($0));
+        }, filename.c_str());
+    }
     return 0;
 }
