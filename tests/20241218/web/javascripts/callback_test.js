@@ -37,9 +37,11 @@ function setTimeoutPromise(ms) {
 }
 
 const run = async () => {
-    setTimeout(() => {
-        console.log('setTimeout 3000ms');
-    }, 3000);
+    // log current time
+    console.log(`run(): ${new Date().toISOString()}`);
+    await setTimeoutPromise(3000);
+    // print log with await
+    console.log('run(): after 1s');
 }
 
 run();
