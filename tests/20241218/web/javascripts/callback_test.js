@@ -28,12 +28,18 @@ function heavyCalc(n) {
     return fib(n);
 }
 
+function setTimeoutPromise(ms) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve();
+        }, ms);
+    });
+}
+
 const run = async () => {
-    const time = new Date().getTime();
-    console.log("heavyCalc(): start");
-    const result = heavyCalc(45);
-    const elapsed = new Date().getTime() - time;
-    console.log(`heavyCalc(): end, result=${result}, elapsed=${elapsed}ms`);
+    setTimeout(() => {
+        console.log('setTimeout 3000ms');
+    }, 3000);
 }
 
 run();
