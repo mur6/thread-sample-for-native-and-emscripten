@@ -55,9 +55,10 @@ void start_calculation(int n) {
         //     }
         // }, result);
         // JavaScript側のコールバック関数を呼び出す
-        std::this_thread::sleep_for(std::chrono::seconds(5));
+        // std::this_thread::sleep_for(std::chrono::seconds(5));
         std::cout << "計算結果: " << result << std::endl;
-        auto jsCallback = emscripten::val::global("onCalcComplete");
+        auto jsCallback = emscripten::val::global("window")["onCalcComplete"];
+        std::cout << "jsCallback: " << jsCallback.typeOf().as<std::string>() << std::endl;
         if (jsCallback.typeOf().as<std::string>() == "function") {
             jsCallback(result); // 計算結果を渡す
         } else {

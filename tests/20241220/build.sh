@@ -29,6 +29,7 @@ build_em() {
         -sPTHREAD_POOL_SIZE=1 \
         -fwasm-exceptions \
         -sENVIRONMENT=web,worker \
+        -s EXPORTED_RUNTIME_METHODS=ccall,cwrap \
         --bind \
         -o "$BUILD_DIR/$PROG_NAME".js
 }
