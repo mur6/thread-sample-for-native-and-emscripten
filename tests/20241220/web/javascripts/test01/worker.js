@@ -1,13 +1,14 @@
 const add = (a, b) => a + b;
 
-onmessage = async function (e) {
+onmessage = (e) => {
     const { funcName, input } = e.data;
     console.log(`recieved: funcName=${funcName}`);
     console.log(`recieved: input=${input}`);
 
     if (funcName === "add") {
-        const result = add(input.a, input.b);
-        postMessage({ result: result });
+        const num = add(input.a, input.b);
+        console.log(`num=${num}`);
+        postMessage({ result: num });
     } else {
         postMessage({ error: `unknown funcName=${funcName}` });
     }

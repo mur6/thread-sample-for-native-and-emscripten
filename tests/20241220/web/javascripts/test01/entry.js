@@ -1,15 +1,16 @@
 console.log("test01/entry.js loaded");
-
 const worker = new Worker("./worker.js");
+worker.onmessage = (e) => {
+    const { result } = e.data;
+    console.log(`message recieved: result=${result}`);
+}
+console.log("worker created", worker);
 
-const run = async () => {
+const run = () => {
     try{
-        const Module = await loadWASM();
-        console.log("Module.startCalculation(): start");
-        const result = await calcAsync(Module);
-        console.log(`Module.startCalculation(): end, result=${result}`);
-        document.getElementById("output-result").innerText = result;
-
+        console.log("run() start");
+        worker.postMessage({ funcName: "add", input: { a: 1, b: 2 } });
+        console.log("message sent");
     } catch (error) {
         console.error("Error loading or running WASM:", error); // Catch and log the error
     }
