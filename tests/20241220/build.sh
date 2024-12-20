@@ -29,8 +29,6 @@ build_em() {
         -sPTHREAD_POOL_SIZE=1 \
         -fwasm-exceptions \
         -sENVIRONMENT=web,worker \
-        --preload-file assets@/assets \
-        --use-preload-plugins \
         --bind \
         -o "$BUILD_DIR/$PROG_NAME".js
 }
@@ -47,9 +45,9 @@ case $1 in
         clean_em
         ;;
     build)
-        # assert $2 is in (super_simple or em_filesystem or em_thread_and_event_loop), and call build_em with $2
-        if [ "$2" != "super_simple" ] && [ "$2" != "em_filesystem" ] && [ "$2" != "em_thread_and_event_loop" ]; then
-            echo "Usage: $0 build {super_simple|em_filesystem|em_thread_and_event_loop}"
+        # assert $2 is in (em_filesystem or em_heavy_calculation), and call build_em with $2
+        if [ "$2" != "em_filesystem" ] && [ "$2" != "em_heavy_calculation" ]; then
+            echo "Usage: $0 build {em_filesystem|em_heavy_calculation}"
             exit 1
         fi
         build_em $2
