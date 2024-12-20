@@ -16,7 +16,13 @@ std::atomic<int> result(0);
 //     }
 // }
 
-void heavy_calculation_wrapped() {
+// 計算が重い処理（例: フィボナッチ数を計算）
+int heavy_computation(int n) {
+    if (n <= 1) return n;
+    return heavy_computation(n - 1) + heavy_computation(n - 2);
+}
+
+void heavy_calculation_wrapped(int n) {
     calculation_complete.store(false);
     int result = heavy_computation(n);
     result.store(result);
@@ -32,20 +38,14 @@ void heavy_calculation_wrapped() {
 //     return result.load();
 // }
 
-// 計算が重い処理（例: フィボナッチ数を計算）
-int heavy_computation(int n) {
-    if (n <= 1) return n;
-    return heavy_computation(n - 1) + heavy_computation(n - 2);
-}
 
 void start_calculation(int n) {
     std::cout << "start_calculation: 計算開始: " << n << std::endl;
     // invoke heavy computation in detached thread
     std::thread([n] {
         std::cout << "thread: 計算開始: " << n << std::endl;
-        
-        std::cout << "thread: 計算終了: " << result << std::endl;
-
+        heavy_calculation_wrapped(n);
+        std::cout << "thread: 計算終了." << std::endl;
     }).detach();
 }
 
