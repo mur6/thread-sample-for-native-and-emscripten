@@ -19,7 +19,7 @@ extern "C" {
 void heavy_calculation() {
     calculation_complete.store(false);
     std::this_thread::sleep_for(std::chrono::seconds(7));
-    result.store(42);  // 計算結果をセット
+    result.store(42); // 計算結果をセット
     calculation_complete.store(true);
 }
 
