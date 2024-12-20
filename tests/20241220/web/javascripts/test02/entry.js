@@ -33,7 +33,7 @@ async function calc_fib(n) {
                 clearInterval(interval);
                 resolve(result);
             }
-        });
+        }, 100);
     });
 }
 
@@ -47,7 +47,9 @@ const registerEvents = () => {
         const num_str = document.getElementById("fib-input-num").value;
         const num = parseInt(num_str, 10);
         console.log(`fib-calc: num=${num}`);
-        
+        const result = await calc_fib(num);
+        console.log(`fib-calc: result=${result}`);
+        document.getElementById("output-fib-result").innerText = result;
     });
 
     // ダミーの処理: カウンター
