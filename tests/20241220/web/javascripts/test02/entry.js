@@ -1,22 +1,21 @@
 console.log("javascripts/test02/entry.js loaded");
 
+import loadWASM from '/dist/main.js';
 
-// const run = () => {
-//     worker.onmessage = (e) => {
-//         const { result } = e.data;
-//         console.log(`message recieved: result=${result}`);
-//     }
-//     console.log("worker created", worker);
-//     try{
-//         console.log("run() start");
-//         worker.postMessage({ funcName: "add", input: { a: 1, b: 2 } });
-//         console.log("message sent");
-//     } catch (error) {
-//         console.error("Error loading or running WASM:", error); // Catch and log the error
-//     }
-// }
+let Module = null;
 
-// run();
+const run = async () => {
+    try{
+        if (!Module) {
+            Module = await loadWASM();
+            console.log("Module created", Module);
+        }
+    } catch (error) {
+        console.error("Error loading or running WASM:", error); // Catch and log the error
+    }
+}
+
+run();
 
 let counter = 0;
 document.getElementById("increment").addEventListener("click", () => {
