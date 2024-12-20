@@ -44,14 +44,22 @@ void start_calculation(int n) {
         // 重い計算を実行
         int result = heavy_computation(n);
         // 結果をコールバック
-        EM_ASM({
-            // check Module has onCalcComplete function
-            if (Module.onCalcComplete) {
-                Module.onCalcComplete($0);
-            } else {
-                console.error('onCalcComplete is not defined');
-            }
-        }, result);
+        // EM_ASM({
+        //     // check Module has onCalcComplete function
+        //     if (window.onCalcComplete) {
+        //         window.onCalcComplete($0);
+        //     } else {
+        //         console.error('window.onCalcComplete is not defined');
+        //     }
+        // }, result);
+        // JavaScript側のコールバック関数を呼び出す
+        auto jsCallback = emscripten::val::global("onCalcComplete");
+        if (jsCallback.typeOf().as<std::string>() == "function") {
+            jsCallback(result); // 計算結果を渡す
+        } else {
+            // emscripten::val::global("console").call<void>("error", "Callback is not registered.");
+            console.log("Callback is not registered.");
+        }
     }).detach();
 }
 

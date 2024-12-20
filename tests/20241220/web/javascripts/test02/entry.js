@@ -4,6 +4,10 @@ import loadWASM from '/dist/em_heavy_calculation.js';
 
 let Module = null;
 
+const onCalcComplete = (retValue) => {
+    console.log(`onCalcComplete: retValue=${retValue}`);
+};
+
 const initModule = async () => {
     try{
         if (!Module) {
@@ -21,7 +25,7 @@ const initModule = async () => {
 const main = async () => {
     await initModule();
     console.log("main() start");
-    const result = Module.heavyCalc();
+    const result = Module.startCalculation(20);
     console.log("main() end", result);
 }
 
