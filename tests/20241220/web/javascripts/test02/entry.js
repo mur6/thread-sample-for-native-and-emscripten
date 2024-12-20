@@ -1,6 +1,6 @@
 console.log("javascripts/test02/entry.js loaded");
 
-import loadWASM from '/dist/main.js';
+import loadWASM from '/dist/em_heavy_calculation.js';
 
 let Module = null;
 
