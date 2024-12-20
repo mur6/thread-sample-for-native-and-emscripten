@@ -4,18 +4,28 @@ import loadWASM from '/dist/em_heavy_calculation.js';
 
 let Module = null;
 
-const run = async () => {
+const initModule = async () => {
     try{
         if (!Module) {
             Module = await loadWASM();
             console.log("Module created", Module);
+        }
+        Module["onCalcComplete"] = (retValue) => {
+            console.log(`onCalcComplete: retValue=${retValue}`);
         }
     } catch (error) {
         console.error("Error loading or running WASM:", error); // Catch and log the error
     }
 }
 
-run();
+const main = async () => {
+    await initModule();
+    console.log("main() start");
+    const result = Module.heavyCalc();
+    console.log("main() end", result);
+}
+
+main();
 
 let counter = 0;
 document.getElementById("increment").addEventListener("click", () => {
