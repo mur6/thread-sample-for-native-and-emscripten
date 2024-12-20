@@ -50,9 +50,11 @@ void check_status_and_call_js_callback() {
                 console.error('window.onCalcComplete is not defined');
             }
         }, r);
-    } else {
-        std::cout << "check_status_and_call_js_callback: 計算中..." << std::endl;
+        calculation_complete.store(false);
+        // cancel this loop
+        return;
     }
+    std::cout << "check_status_and_call_js_callback: 計算中..." << std::endl;
     emscripten_async_call([](void*){
         check_status_and_call_js_callback();
     }, nullptr, 500); // 0.5秒ごとに呼び出し

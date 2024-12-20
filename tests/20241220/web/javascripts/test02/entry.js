@@ -31,6 +31,7 @@ async function calc_fib(n) {
         const interval = setInterval(() => {
             if (calcResult !== 0) {
                 const result = calcResult;
+                calcResult = 0;
                 clearInterval(interval);
                 resolve(result);
             }
