@@ -6,55 +6,56 @@
 #include <iostream>
 #include <chrono>
 
-std::atomic<bool> calculation_complete(false);
-std::atomic<int> result(0);
+// std::atomic<bool> calculation_complete(false);
+// std::atomic<int> result(0);
 
-// メモリのオフセット位置を取得
-extern "C" {
-    int get_calculation_complete_address() {
-        return reinterpret_cast<int>(&calculation_complete);
-    }
+// // メモリのオフセット位置を取得
+// extern "C" {
+//     int get_calculation_complete_address() {
+//         return reinterpret_cast<int>(&calculation_complete);
+//     }
+// }
+
+// void heavy_calculation_by_using_atomic() {
+//     calculation_complete.store(false);
+//     std::this_thread::sleep_for(std::chrono::seconds(7));
+//     result.store(42); // 計算結果をセット
+//     calculation_complete.store(true);
+// }
+
+// void start_calculation() {
+//     calculation_complete.store(false);
+//     std::thread(heavy_calculation).detach();
+// }
+
+// int get_calculation_result() {
+//     return result.load();
+// }
+
+// 計算が重い処理（例: フィボナッチ数を計算）
+int heavy_computation(int n) {
+    if (n <= 1) return n;
+    return heavy_computation(n - 1) + heavy_computation(n - 2);
 }
 
-void heavy_calculation() {
-    calculation_complete.store(false);
-    std::this_thread::sleep_for(std::chrono::seconds(7));
-    result.store(42); // 計算結果をセット
-    calculation_complete.store(true);
+void start_calculation(int n) {
+    // invoke heavy computation in detached thread
+    std::thread([n] {
+        // 重い計算を実行
+        int result = heavy_computation(n);
+        // 結果をコールバック
+        EM_ASM({
+            // check Module has onCalcComplete function
+            if (Module.onCalcComplete) {
+                Module.onCalcComplete($0);
+            } else {
+                console.error('onCalcComplete is not defined');
+            }
+        }, result);
+    }).detach();
 }
 
-void start_calculation() {
-    calculation_complete.store(false);
-    std::thread(heavy_calculation).detach();
-}
-
-int get_calculation_result() {
-    return result.load();
-}
 
 EMSCRIPTEN_BINDINGS(module) {
     emscripten::function("startCalculation", &start_calculation);
-    emscripten::function("getCalculationResult", &get_calculation_result);
-    emscripten::function("get_calculation_complete_address", &get_calculation_complete_address);
 }
-
-// int main() {
-//     EM_ASM(
-//         console.log('before startCalculation');
-//         Module.startCalculation();
-//         console.log('after startCalculation');
-//         const address = Module.get_calculation_complete_address(); // アドレスを取得
-//         const HEAP8 = new Int8Array(Module.HEAP8.buffer);
-//         // const interval = setInterval(() => {
-//         //     const value = Atomics.load(HEAP8, address);
-//         //     statusElement.textContent = `calculation_complete Status: ${value ? "Done" : "In Progress"}`;
-//         //     if (value) {
-//         //         console.log('Calculation result:', Module.getCalculationResult());
-//         //         clearInterval(interval);
-//         //     }
-//         // }, 1000);
-//         const interval = setInterval(() => {
-//             console.log('interval');
-//         }, 1000);
-//     );
-// }
