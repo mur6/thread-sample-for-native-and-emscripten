@@ -6,8 +6,8 @@
 #include <iostream>
 #include <chrono>
 
-// std::atomic<bool> calculation_complete(false);
-// std::atomic<int> result(0);
+std::atomic<bool> calculation_complete(false);
+std::atomic<int> result(0);
 
 // // メモリのオフセット位置を取得
 // extern "C" {
@@ -16,12 +16,12 @@
 //     }
 // }
 
-// void heavy_calculation_by_using_atomic() {
-//     calculation_complete.store(false);
-//     std::this_thread::sleep_for(std::chrono::seconds(7));
-//     result.store(42); // 計算結果をセット
-//     calculation_complete.store(true);
-// }
+void heavy_calculation_wrapped() {
+    calculation_complete.store(false);
+    int result = heavy_computation(n);
+    result.store(result);
+    calculation_complete.store(true);
+}
 
 // void start_calculation() {
 //     calculation_complete.store(false);
@@ -42,30 +42,10 @@ void start_calculation(int n) {
     std::cout << "start_calculation: 計算開始: " << n << std::endl;
     // invoke heavy computation in detached thread
     std::thread([n] {
-        // 重い計算を実行
         std::cout << "thread: 計算開始: " << n << std::endl;
-        int result = heavy_computation(n);
-        // 結果をコールバック
-        // EM_ASM({
-        //     // check Module has onCalcComplete function
-        //     if (window.onCalcComplete) {
-        //         window.onCalcComplete($0);
-        //     } else {
-        //         console.error('window.onCalcComplete is not defined');
-        //     }
-        // }, result);
-        // JavaScript側のコールバック関数を呼び出す
-        // std::this_thread::sleep_for(std::chrono::seconds(5));
-        std::cout << "計算結果: " << result << std::endl;
-        auto jsCallback = emscripten::val::global("window")["onCalcComplete"];
-        std::cout << "jsCallback: " << jsCallback.typeOf().as<std::string>() << std::endl;
-        if (jsCallback.typeOf().as<std::string>() == "function") {
-            jsCallback(result); // 計算結果を渡す
-        } else {
-            // emscripten::val::global("console").call<void>("error", "Callback is not registered.");
-            // console.log("Callback is not registered.");
-            std::cout << "Callback is not registered." << std::endl;
-        }
+        
+        std::cout << "thread: 計算終了: " << result << std::endl;
+
     }).detach();
 }
 
