@@ -23,6 +23,7 @@ async function calc_fib(n) {
         window.onCalcComplete = (retValue) => {
             console.log(`onCalcComplete: retValue=${retValue}`);
             resolve(retValue);
+            delete window.onCalcComplete; // クリーンアップ
         };
         Module.startCalculation(n);
     });
