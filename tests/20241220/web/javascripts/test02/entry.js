@@ -3,16 +3,9 @@ console.log("javascripts/test02/entry.js loaded");
 import loadWASM from '/dist/em_heavy_calculation.js';
 
 let Module = null;
-let calcResult = 0;
 
 const initModule = async () => {
     try{
-
-        window.onCalcComplete = (retValue) => {
-            console.log(`onCalcComplete: retValue=${retValue}`);
-            calcResult = retValue;
-        };
-
         if (!Module) {
             Module = await loadWASM();
             console.log("Module created", Module);
@@ -26,16 +19,12 @@ initModule();
 
 async function calc_fib(n) {
     await initModule();
-    Module.startCalculation(n);
     return new Promise((resolve, reject) => {
-        const interval = setInterval(() => {
-            if (calcResult !== 0) {
-                const result = calcResult;
-                calcResult = 0;
-                clearInterval(interval);
-                resolve(result);
-            }
-        }, 100);
+        window.onCalcComplete = (retValue) => {
+            console.log(`onCalcComplete: retValue=${retValue}`);
+            resolve(retValue);
+        };
+        Module.startCalculation(n);
     });
 }
 
