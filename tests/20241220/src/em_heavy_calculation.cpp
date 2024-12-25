@@ -9,13 +9,6 @@
 std::atomic<bool> calculation_complete(false);
 std::atomic<int> result(0);
 
-// // メモリのオフセット位置を取得
-// extern "C" {
-//     int get_calculation_complete_address() {
-//         return reinterpret_cast<int>(&calculation_complete);
-//     }
-// }
-
 // 計算が重い処理（例: フィボナッチ数を計算）
 int heavy_computation(int n) {
     if (n <= 1) return n;
@@ -28,15 +21,6 @@ void heavy_calculation_wrapped(int n) {
     result.store(r);
     calculation_complete.store(true);
 }
-
-// void start_calculation() {
-//     calculation_complete.store(false);
-//     std::thread(heavy_calculation).detach();
-// }
-
-// int get_calculation_result() {
-//     return result.load();
-// }
 
 void check_status_and_call_js_callback() {
     if (calculation_complete.load()) {
