@@ -30,7 +30,9 @@ build_em() {
     mkdir -p "$DIST_DIR"
     echo "DIST_DIR=$DIST_DIR"
     # emcc src/em_camera_histogram.cpp -o camera_histogram.js -s WASM=1 -s "EXPORTED_FUNCTIONS=['_malloc','_free']" -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap']" -O3
+    # emcc -o output.js capture_red_image_wasm.cpp lodepng.cpp -s USE_PTHREADS=0 -s MODULARIZE=1 -s EXPORT_NAME='Module'
     emcc "$HERE/src/$PROG_NAME.cpp" \
+        "$HERE/src/lodepng.cpp" \
         -std=c++23 \
         -s MODULARIZE=1 \
         -s EXPORT_ES6=1 \
@@ -39,7 +41,7 @@ build_em() {
         -sPTHREAD_POOL_SIZE=1 \
         -fwasm-exceptions \
         -sENVIRONMENT=web,worker \
-        -s "EXPORTED_FUNCTIONS=['_malloc','_free']" \
+        -s "EXPORTED_FUNCTIONS=['_malloc','_free', '_main', '_captureImageFromCamera']" \
         -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap']" \
         --bind \
         -o "$DIST_DIR/$PROG_NAME".js
