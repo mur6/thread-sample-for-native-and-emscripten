@@ -2,8 +2,12 @@
 #include <emscripten.h>
 #include <emscripten/bind.h>
 #include <emscripten/val.h>
+#include <fstream>
+#include <chrono>
+#include <format>
 #include <vector>
 #include <cstdint>
+#include <string>
 #include <algorithm>
 #include "lodepng.h" // Include LodePNG for PNG encoding
 
@@ -43,6 +47,17 @@ public:
         }
     }
 
+    std::vector<unsigned char> makePng()
+    {
+        std::vector<unsigned char> png;
+        unsigned error = lodepng::encode(png, reinterpret_cast<const unsigned char *>(histogram.data()), width, height);
+        if (error)
+        {
+            EM_ASM({ console.error('Error encoding PNG:', UTF8ToString($0)); }, lodepng_error_text(error));
+        }
+        return png;
+    }
+
     std::vector<int> getHistogram() const
     {
         return histogram;
@@ -74,6 +89,17 @@ extern "C"
     {
         if (!g_histogram)
             return nullptr;
+        auto png = g_histogram->makePng();
+        // Save the PNG image to the Emscripten virtual file system
+        // chrono, datetimeを使ってファイル名を生成
+        //
+        //
+        auto now = std::chrono::system_clock::now();
+        std::string filename = std::format("hist_{:%Y%m%d_%H%M%S}.png", now);
+        std::ofstream file(filename, std::ios::binary);
+        file.write(reinterpret_cast<const char *>(png.data()), png.size());
+        file.close();
+        EM_ASM({ console.error('Error encoding PNG:', UTF8ToString($0)); }, filename.c_str());
         return g_histogram->getHistogram().data();
     }
 }
