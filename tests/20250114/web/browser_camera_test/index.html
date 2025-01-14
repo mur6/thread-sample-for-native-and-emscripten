@@ -93,7 +93,7 @@
                 // ヒストグラムを描画
                 histogramCtx.fillStyle = 'rgb(0, 0, 255)';
                 const binWidth = histogramCanvas.width / 256;
-                
+
                 for (let i = 0; i < 256; i++) {
                     const height = (histogramData[i] / maxVal) * histogramCanvas.height;
                     histogramCtx.fillRect(
@@ -106,6 +106,6 @@
             }
         }
     </script>
-    <script src="camera_histogram.js"></script>
+    <script src="dist/camera_histogram.js"></script>
 </body>
 </html>
