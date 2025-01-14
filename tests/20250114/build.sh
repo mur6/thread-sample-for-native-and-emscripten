@@ -18,10 +18,14 @@ build_em() {
     echo "DIR=$HERE"
     echo "PROG_NAME=$PROG_NAME"
     echo "Building..."
-    if PROG_NAME=em_camera_histogram; then
+    # if PROG_NAME == em_camera_histogram then DIST_DIR = $BUILD_DIR/em_camera_histogram else DIST_DIR = $BUILD_DIR/em_heavy_calculation
+    if [ "$PROG_NAME" == "em_camera_histogram" ]; then
         DIST_DIR=$HERE/web/browser_camera_test/dist
-    elif PROG_NAME=save_as_png; then
+    elif [ "$PROG_NAME" == "save_as_png" ]; then
         DIST_DIR=$HERE/web/save_as_png/dist
+    else
+        echo "Invalid PROG_NAME=$PROG_NAME"
+        exit 1
     fi
     mkdir -p "$DIST_DIR"
     echo "DIST_DIR=$DIST_DIR"
