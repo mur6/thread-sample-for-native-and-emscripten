@@ -4,6 +4,7 @@
 #include <emscripten/val.h>
 #include <vector>
 #include <cstdint>
+#include <algorithm>
 
 // ヒストグラムを計算するクラス
 class ImageHistogram
