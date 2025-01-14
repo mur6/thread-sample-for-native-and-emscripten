@@ -46,8 +46,8 @@ case $1 in
         ;;
     build)
         # assert $2 is in (em_filesystem or em_heavy_calculation), and call build_em with $2
-        if [ "$2" != "em_filesystem" ] && [ "$2" != "em_heavy_calculation" ]; then
-            echo "Usage: $0 build {em_filesystem|em_heavy_calculation}"
+        if [ "$2" != "em_camera_histogram" ] && [ "$2" != "em_heavy_calculation" ]; then
+            echo "Usage: $0 build {em_camera_histogram|em_heavy_calculation}"
             exit 1
         fi
         build_em $2
