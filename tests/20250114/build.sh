@@ -18,7 +18,11 @@ build_em() {
     echo "DIR=$HERE"
     echo "PROG_NAME=$PROG_NAME"
     echo "Building..."
-    DIST_DIR=$HERE/web/browser_camera_test/dist
+    if PROG_NAME=em_camera_histogram; then
+        DIST_DIR=$HERE/web/browser_camera_test/dist
+    elif PROG_NAME=save_as_png; then
+        DIST_DIR=$HERE/web/save_as_png/dist
+    fi
     mkdir -p "$DIST_DIR"
     echo "DIST_DIR=$DIST_DIR"
     # emcc src/em_camera_histogram.cpp -o camera_histogram.js -s WASM=1 -s "EXPORTED_FUNCTIONS=['_malloc','_free']" -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap']" -O3
@@ -50,8 +54,8 @@ case $1 in
         ;;
     build)
         # assert $2 is in (em_filesystem or em_heavy_calculation), and call build_em with $2
-        if [ "$2" != "em_camera_histogram" ] && [ "$2" != "em_heavy_calculation" ]; then
-            echo "Usage: $0 build {em_camera_histogram|em_heavy_calculation}"
+        if [ "$2" != "em_camera_histogram" ] && [ "$2" != "save_as_png" ]; then
+            echo "Usage: $0 build {em_camera_histogram|save_as_png}"
             exit 1
         fi
         build_em $2
