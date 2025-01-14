@@ -19,8 +19,8 @@ build_em() {
     echo "PROG_NAME=$PROG_NAME"
     echo "Building..."
     # if PROG_NAME == em_camera_histogram then DIST_DIR = $BUILD_DIR/em_camera_histogram else DIST_DIR = $BUILD_DIR/em_heavy_calculation
-    if [ "$PROG_NAME" == "em_camera_histogram" ]; then
-        DIST_DIR=$HERE/web/browser_camera_test/dist
+    if [ "$PROG_NAME" == "camera_hist" ]; then
+        DIST_DIR=$HERE/web/camera_hist/dist
     elif [ "$PROG_NAME" == "save_as_png" ]; then
         DIST_DIR=$HERE/web/save_as_png/dist
     else
@@ -31,7 +31,7 @@ build_em() {
     echo "DIST_DIR=$DIST_DIR"
     # emcc src/em_camera_histogram.cpp -o camera_histogram.js -s WASM=1 -s "EXPORTED_FUNCTIONS=['_malloc','_free']" -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap']" -O3
     # emcc -o output.js capture_red_image_wasm.cpp lodepng.cpp -s USE_PTHREADS=0 -s MODULARIZE=1 -s EXPORT_NAME='Module'
-    if [ "$PROG_NAME" == "em_camera_histogram" ]; then
+    if [ "$PROG_NAME" == "camera_hist" ]; then
         EXPORTED_FUNCTIONS="_malloc,_free"
     elif [ "$PROG_NAME" == "save_as_png" ]; then
         EXPORTED_FUNCTIONS="_malloc,_free,_main,_captureImageFromCamera"
@@ -53,7 +53,7 @@ build_em() {
         -s "EXPORTED_FUNCTIONS=$EXPORTED_FUNCTIONS" \
         -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap']" \
         --bind \
-        -o "$DIST_DIR/$PROG_NAME".js
+        -o "$DIST_DIR/my_em".js
 }
 
 run_em() {
@@ -69,8 +69,8 @@ case $1 in
         ;;
     build)
         # assert $2 is in (em_filesystem or em_heavy_calculation), and call build_em with $2
-        if [ "$2" != "em_camera_histogram" ] && [ "$2" != "save_as_png" ]; then
-            echo "Usage: $0 build {em_camera_histogram|save_as_png}"
+        if [ "$2" != "camera_hist" ] && [ "$2" != "save_as_png" ]; then
+            echo "Usage: $0 build {camera_hist|save_as_png}"
             exit 1
         fi
         build_em $2
