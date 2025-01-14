@@ -18,8 +18,9 @@ build_em() {
     echo "DIR=$HERE"
     echo "PROG_NAME=$PROG_NAME"
     echo "Building..."
-    mkdir -p "$BUILD_DIR"
-    echo "BUILD_DIR=$BUILD_DIR"
+    DIST_DIR=$HERE/web/browser_camera_test/dist
+    mkdir -p "$DIST_DIR"
+    echo "DIST_DIR=$DIST_DIR"
     emcc "$HERE/src/$PROG_NAME.cpp" \
         -std=c++23 \
         -s MODULARIZE=1 \
@@ -30,7 +31,7 @@ build_em() {
         -fwasm-exceptions \
         -sENVIRONMENT=web,worker \
         --bind \
-        -o "$BUILD_DIR/$PROG_NAME".js
+        -o "$DIST_DIR/$PROG_NAME".js
 }
 
 run_em() {
