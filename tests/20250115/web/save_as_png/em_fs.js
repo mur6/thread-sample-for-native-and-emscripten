@@ -82,3 +82,6 @@ function downloadFile(filepath) {
         alert('Failed to download file: ' + e.message);
     }
 }
+
+
+export { showFileList, downloadFile };
