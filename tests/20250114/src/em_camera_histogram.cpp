@@ -5,6 +5,7 @@
 #include <vector>
 #include <cstdint>
 #include <algorithm>
+#include "lodepng.h" // Include LodePNG for PNG encoding
 
 // ヒストグラムを計算するクラス
 class ImageHistogram
