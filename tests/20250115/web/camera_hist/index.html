@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Camera Histogram</title>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        #videoElement {
+            width: 640px;
+            height: 480px;
+            background-color: #666;
+        }
+        #histogramCanvas {
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <video id="videoElement" autoplay></video>
+        <button id="captureButton">Capture and Calculate Histogram</button>
+        <canvas id="histogramCanvas" width="512" height="256"></canvas>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
