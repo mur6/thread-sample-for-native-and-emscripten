@@ -21,6 +21,7 @@ build_em() {
     DIST_DIR=$HERE/web/browser_camera_test/dist
     mkdir -p "$DIST_DIR"
     echo "DIST_DIR=$DIST_DIR"
+    # emcc src/em_camera_histogram.cpp -o camera_histogram.js -s WASM=1 -s "EXPORTED_FUNCTIONS=['_malloc','_free']" -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap']" -O3
     emcc "$HERE/src/$PROG_NAME.cpp" \
         -std=c++23 \
         -s MODULARIZE=1 \
@@ -30,6 +31,8 @@ build_em() {
         -sPTHREAD_POOL_SIZE=1 \
         -fwasm-exceptions \
         -sENVIRONMENT=web,worker \
+        -s "EXPORTED_FUNCTIONS=['_malloc','_free']" \
+        -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap']" \
         --bind \
         -o "$DIST_DIR/$PROG_NAME".js
 }
