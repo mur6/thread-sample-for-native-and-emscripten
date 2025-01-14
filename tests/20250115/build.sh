@@ -51,7 +51,7 @@ build_em() {
         -fwasm-exceptions \
         -sENVIRONMENT=web,worker \
         -s "EXPORTED_FUNCTIONS=$EXPORTED_FUNCTIONS" \
-        -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap']" \
+        -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap', 'FS']" \
         --bind \
         -o "$DIST_DIR/my_em".js
 }
