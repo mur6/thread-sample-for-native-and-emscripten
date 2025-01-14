@@ -99,7 +99,7 @@ extern "C"
         std::ofstream file(filename, std::ios::binary);
         file.write(reinterpret_cast<const char *>(png.data()), png.size());
         file.close();
-        EM_ASM({ console.error('Error encoding PNG:', UTF8ToString($0)); }, filename.c_str());
+        EM_ASM({ console.log('Error encoding PNG:', UTF8ToString($0)); }, filename.c_str());
         return g_histogram->getHistogram().data();
     }
 }
