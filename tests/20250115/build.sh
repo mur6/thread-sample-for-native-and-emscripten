@@ -34,7 +34,7 @@ build_em() {
     if [ "$PROG_NAME" == "camera_hist" ]; then
         EXPORTED_FUNCTIONS="_malloc,_free"
     elif [ "$PROG_NAME" == "save_as_png" ]; then
-        EXPORTED_FUNCTIONS="_malloc,_free,_main,_captureImageFromCamera"
+        EXPORTED_FUNCTIONS="_malloc,_free,_main,_captureImageFromCamera,_makeOneFile"
     else
         echo "Invalid PROG_NAME=$PROG_NAME"
         exit 1

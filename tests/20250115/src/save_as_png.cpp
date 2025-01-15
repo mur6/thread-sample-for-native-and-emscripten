@@ -1,6 +1,9 @@
 #include <emscripten.h>
 #include <emscripten/html5.h>
 #include <vector>
+#include <chrono>
+#include <string>
+#include <format>
 #include <fstream>
 #include <algorithm>
 #include <cstdint>
@@ -78,22 +81,15 @@ extern "C"
         });
     }
 
-    EMSCRIPTEN_KEEPALIVE const int *getHistogramData()
+    EMSCRIPTEN_KEEPALIVE void makeOneFile()
     {
-        if (!g_histogram)
-            return nullptr;
-        auto png = g_histogram->makePng();
-        // Save the PNG image to the Emscripten virtual file system
-        // chrono, datetimeを使ってファイル名を生成
-        //
-        //
         auto now = std::chrono::system_clock::now();
-        std::string filename = std::format("hist_{:%Y%m%d_%H%M%S}.png", now);
-        std::ofstream file(filename, std::ios::binary);
-        file.write(reinterpret_cast<const char *>(png.data()), png.size());
+        std::string filename = std::format("hist_{:%Y%m%d_%H%M%S}.txt", now);
+        // make one text file in the virtual filesystem
+        std::ofstream file("/working/" + filename);
+        file << "Hello, World!";
         file.close();
-        EM_ASM({ console.log('Error encoding PNG:', UTF8ToString($0)); }, filename.c_str());
-        return g_histogram->getHistogram().data();
+        EM_ASM({ console.log('File saved to /working/$0', UTF8ToString($0)); }, filename.c_str());
     }
 }
 

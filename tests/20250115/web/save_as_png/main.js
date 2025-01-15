@@ -10,8 +10,13 @@ const run = async () => {
     console.log("Module loaded:", Module);
     // Module.ccall('main', null, [], []);
     const currentPath = '/working/';
+    const testFunc = () => {
+        console.log("testFunc called");
+        Module.ccall('makeOneFile', null, [], []);
+        showFileList(Module.FS, currentPath);
+    }
     document.getElementById('showFilesButton').addEventListener(
-        'click', () => showFileList(Module.FS, currentPath));
+        'click', testFunc);
 }
 
 run();
