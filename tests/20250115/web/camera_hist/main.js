@@ -1,6 +1,6 @@
-console.log("browser_camera_test/js/main.js loaded");
+console.log("camera_hist/dist/my_em.js loaded");
 
-import loadWASM from '/browser_camera_test/dist/em_camera_histogram.js';
+import loadWASM from '/camera_hist/dist/my_em.js';
 
 
 async function init(wasmModule) {
