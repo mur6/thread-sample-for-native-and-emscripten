@@ -19,7 +19,7 @@ function showFileList(FS, directory) {
             const fileDiv = document.createElement('div');
             fileDiv.className = 'file-item';
             fileDiv.textContent = file;
-            fileDiv.onclick = () => downloadFile(fullPath);
+            fileDiv.onclick = () => downloadFile(FS, fullPath);
             fileListDiv.appendChild(fileDiv);
         }
     } catch (e) {
@@ -28,7 +28,7 @@ function showFileList(FS, directory) {
     }
 }
 
-function downloadFile(filepath) {
+function downloadFile(FS, filepath) {
     try {
         // ファイルの内容を読み取り
         const content = FS.readFile(filepath);
