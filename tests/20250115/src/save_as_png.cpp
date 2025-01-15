@@ -81,7 +81,32 @@ extern "C"
         });
     }
 
-    EMSCRIPTEN_KEEPALIVE void makeOneFile()
+    EMSCRIPTEN_KEEPALIVE void makeOnePngFile()
+    {
+        int width = 256;
+        int height = 256;
+        uint8_t *buffer = new uint8_t[width * height * 4];
+        for (int i = 0; i < width * height * 4; i += 4)
+        {
+            buffer[i] = 0;     // R
+            buffer[i + 1] = 0; // G
+            buffer[i + 2] = 255; // B
+            buffer[i + 3] = 255; // A
+        }
+        std::vector<unsigned char> png;
+        unsigned error = lodepng::encode(png, buffer, width, height);
+        if (error)
+        {
+            EM_ASM({ console.error('Error encoding PNG:', UTF8ToString($0)); }, lodepng_error_text(error));
+            return;
+        }
+        std::ofstream file("/working/blue_image.png", std::ios::binary);
+        file.write(reinterpret_cast<const char *>(png.data()), png.size());
+        file.close();
+        EM_ASM({ console.log('File saved to /working/blue_image.png'); });
+    }
+
+    EMSCRIPTEN_KEEPALIVE void makeOneTextFile()
     {
         auto now = std::chrono::system_clock::now();
         auto now_sec = std::chrono::time_point_cast<std::chrono::seconds>(now);
