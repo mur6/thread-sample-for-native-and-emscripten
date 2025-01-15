@@ -1,7 +1,7 @@
 console.log("camera_hist/dist/my_em.js loaded");
 
 import loadWASM from '/camera_hist/dist/my_em.js';
-
+import { showFileList, downloadFile } from '/save_as_png/em_fs.js';
 
 async function init(wasmModule) {
     const video = document.getElementById('videoElement');
@@ -71,10 +71,25 @@ async function init(wasmModule) {
     }
 }
 
+function initEmFilesystem(Module) {
+    const FS = Module.FS;
+    const currentPath = '/working/';
+    FS.mkdir(currentPath);
+    FS.mount(Module.MEMFS, {}, currentPath);
+    FS.syncfs(true, function(err) { console.log('Filesystem synced'); });
+}
+
 const run = async () => {
     // Load the wasm module and get the exports
     const wasmModule = await loadWASM();
     await init(wasmModule);
+    initEmFilesystem(wasmModule);
+    const testFunc = () => {
+        console.log("testFunc called");
+        showFileList(wasmModule.FS, "/working/");
+    }
+    document.getElementById('showFilesButton').addEventListener(
+        'click', testFunc);
 }
 
 run();
