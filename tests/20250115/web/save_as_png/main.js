@@ -12,7 +12,7 @@ const run = async () => {
     const currentPath = '/working/';
     const testFunc = () => {
         console.log("testFunc called");
-        Module.ccall('makeOneFile', null, [], []);
+        Module.ccall('makeOnePngFile', null, [], []);
         showFileList(Module.FS, currentPath);
     }
     document.getElementById('showFilesButton').addEventListener(
