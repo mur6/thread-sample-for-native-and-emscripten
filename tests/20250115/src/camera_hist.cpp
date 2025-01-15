@@ -90,10 +90,6 @@ extern "C"
         if (!g_histogram)
             return nullptr;
         auto png = g_histogram->makePng();
-        // Save the PNG image to the Emscripten virtual file system
-        // chrono, datetimeを使ってファイル名を生成
-        //
-        //
         auto now = std::chrono::system_clock::now();
         std::string filename = std::format("hist_{:%Y%m%d_%H%M%S}.png", now);
         std::ofstream file(filename, std::ios::binary);
