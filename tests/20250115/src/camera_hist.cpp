@@ -93,6 +93,19 @@ extern "C"
         return g_histogram->getHistogram().data();
     }
 
+    EMSCRIPTEN_KEEPALIVE void enhanceRed(uint8_t* buffer, int width, int height) {
+        int numPixels = width * height;
+        for (int i = 0; i < numPixels; ++i) {
+            int offset = i * 4;
+            uint8_t red = buffer[offset];
+            uint8_t green = buffer[offset + 1];
+            uint8_t blue = buffer[offset + 2];
+
+            // Simple enhancement: amplify the red channel
+            buffer[offset + 0] = std::min(255, red + 50);
+        }
+    }
+
     EMSCRIPTEN_KEEPALIVE void writeImageAsPng(uint8_t *data, int width, int height)
     {
         if (!g_histogram)
