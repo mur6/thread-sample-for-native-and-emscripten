@@ -91,11 +91,11 @@ extern "C"
             return nullptr;
         auto png = g_histogram->makePng();
         auto now = std::chrono::system_clock::now();
-        std::string filename = std::format("hist_{:%Y%m%d_%H%M%S}.png", now);
+        std::string filename = std::format("/working/hist_{:%Y%m%d_%H%M%S}.png", now);
         std::ofstream file(filename, std::ios::binary);
         file.write(reinterpret_cast<const char *>(png.data()), png.size());
         file.close();
-        EM_ASM({ console.log('Error encoding PNG:', UTF8ToString($0)); }, filename.c_str());
+        EM_ASM({ console.log('Png encoded:', UTF8ToString($0)); }, filename.c_str());
         return g_histogram->getHistogram().data();
     }
 }
