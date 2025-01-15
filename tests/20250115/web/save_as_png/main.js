@@ -10,7 +10,8 @@ const run = async () => {
     console.log("Module loaded:", Module);
     // Module.ccall('main', null, [], []);
     const currentPath = '/working/';
-    document.getElementById('showFilesButton').onclick = () => showFileList(Module.FS, currentPath);
+    document.getElementById('showFilesButton').addEventListener(
+        'click', () => showFileList(Module.FS, currentPath));
 }
 
 run();

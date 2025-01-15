@@ -24,59 +24,77 @@ void enhanceRed(uint8_t *buffer, int width, int height)
 
 extern "C"
 {
-// Function to capture the image from the camera
-EMSCRIPTEN_KEEPALIVE
-void captureImageFromCamera()
-{
-    EM_ASM({
-        const video = document.createElement('video');
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-
-        navigator.mediaDevices.getUserMedia({video : true}).then(stream => {
-            video.srcObject = stream;
-            video.play();
-
-            video.addEventListener('loadeddata', () => {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                context.drawImage(video, 0, 0);
-                video.pause();
-                video.srcObject.getTracks().forEach(track => track.stop());
-                
-                const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-                const buffer = new Uint8Array(imageData.data.buffer);
-                
-                Module.ccall('processImage', null, ['array', 'number', 'number'], [buffer, canvas.width, canvas.height]); });
-        });
-    });
-}
-
-// Function to process the image in C++
-EMSCRIPTEN_KEEPALIVE
-void processImage(uint8_t *buffer, int width, int height)
-{
-    // Enhance red color
-    enhanceRed(buffer, width, height);
-
-    // Encode the image as PNG using LodePNG
-    std::vector<unsigned char> png;
-    unsigned error = lodepng::encode(png, buffer, width, height);
-    if (error)
+    // Function to capture the image from the camera
+    EMSCRIPTEN_KEEPALIVE
+    void captureImageFromCamera()
     {
-        EM_ASM({ console.error('Error encoding PNG:', UTF8ToString($0)); }, lodepng_error_text(error));
-        return;
+        EM_ASM({
+            const video = document.createElement('video');
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            navigator.mediaDevices.getUserMedia({video : true}).then(stream => {
+                video.srcObject = stream;
+                video.play();
+
+                video.addEventListener('loadeddata', () => {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    context.drawImage(video, 0, 0);
+                    video.pause();
+                    video.srcObject.getTracks().forEach(track => track.stop());
+                    
+                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                    const buffer = new Uint8Array(imageData.data.buffer);
+                    
+                    Module.ccall('processImage', null, ['array', 'number', 'number'], [buffer, canvas.width, canvas.height]); });
+            });
+        });
     }
 
-    // Save the PNG image to the Emscripten virtual file system
-    std::ofstream file("/red_enhanced_image.png", std::ios::binary);
-    file.write(reinterpret_cast<const char *>(png.data()), png.size());
-    file.close();
+    // Function to process the image in C++
+    EMSCRIPTEN_KEEPALIVE
+    void processImage(uint8_t *buffer, int width, int height)
+    {
+        // Enhance red color
+        enhanceRed(buffer, width, height);
 
-    EM_ASM({
-        console.log('Image saved to /red_enhanced_image.png');
-    });
-}
+        // Encode the image as PNG using LodePNG
+        std::vector<unsigned char> png;
+        unsigned error = lodepng::encode(png, buffer, width, height);
+        if (error)
+        {
+            EM_ASM({ console.error('Error encoding PNG:', UTF8ToString($0)); }, lodepng_error_text(error));
+            return;
+        }
+
+        // Save the PNG image to the Emscripten virtual file system
+        std::ofstream file("/red_enhanced_image.png", std::ios::binary);
+        file.write(reinterpret_cast<const char *>(png.data()), png.size());
+        file.close();
+
+        EM_ASM({
+            console.log('Image saved to /red_enhanced_image.png');
+        });
+    }
+
+    EMSCRIPTEN_KEEPALIVE const int *getHistogramData()
+    {
+        if (!g_histogram)
+            return nullptr;
+        auto png = g_histogram->makePng();
+        // Save the PNG image to the Emscripten virtual file system
+        // chrono, datetimeを使ってファイル名を生成
+        //
+        //
+        auto now = std::chrono::system_clock::now();
+        std::string filename = std::format("hist_{:%Y%m%d_%H%M%S}.png", now);
+        std::ofstream file(filename, std::ios::binary);
+        file.write(reinterpret_cast<const char *>(png.data()), png.size());
+        file.close();
+        EM_ASM({ console.log('Error encoding PNG:', UTF8ToString($0)); }, filename.c_str());
+        return g_histogram->getHistogram().data();
+    }
 }
 
 EMSCRIPTEN_KEEPALIVE
