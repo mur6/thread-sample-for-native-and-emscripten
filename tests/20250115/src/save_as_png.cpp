@@ -84,7 +84,8 @@ extern "C"
     EMSCRIPTEN_KEEPALIVE void makeOneFile()
     {
         auto now = std::chrono::system_clock::now();
-        std::string filename = std::format("hist_{:%Y%m%d_%H%M%S}.txt", now);
+        auto now_sec = std::chrono::time_point_cast<std::chrono::seconds>(now);
+        std::string filename = std::format("hist_{:%Y%m%d_%EX}.txt", now_sec);
         // make one text file in the virtual filesystem
         std::ofstream file("/working/" + filename);
         file << "Hello, World!";
