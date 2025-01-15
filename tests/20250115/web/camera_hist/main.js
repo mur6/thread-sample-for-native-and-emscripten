@@ -35,6 +35,10 @@ async function init(wasmModule) {
             ['number', 'number', 'number'],
             [dataPtr, captureCanvas.width, captureCanvas.height]
         );
+        Module.ccall('writeImageAsPng', null,
+            ['number', 'number', 'number'],
+            [dataPtr, captureCanvas.width, captureCanvas.height]
+        );
 
         // ヒストグラムデータを取得
         const histogramPtr = Module.ccall('getHistogramData', 'number', [], []);
