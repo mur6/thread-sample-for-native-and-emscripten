@@ -26,12 +26,12 @@ async function init(wasmModule) {
         // C++の処理を呼び出し
         const Module = wasmModule;
         Module.ccall('initHistogram', null, [], []);
-        
+
         // TypedArrayをC++のメモリに転送
         const dataPtr = Module._malloc(imageData.data.length);
         Module.HEAPU8.set(imageData.data, dataPtr);
-        
-        Module.ccall('processImageData', null, 
+
+        Module.ccall('processImageData', null,
             ['number', 'number', 'number'],
             [dataPtr, captureCanvas.width, captureCanvas.height]
         );
