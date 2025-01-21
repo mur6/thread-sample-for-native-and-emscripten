@@ -43,35 +43,6 @@ emscripten::val convertVectorToJSArray(const std::vector<unsigned char> &vec)
     return result;
 }
 
-// 画像データを処理するメインメソッド
-emscripten::val cropAndResizeImage(const emscripten::val &inputData, int inputWidth, int inputHeight)
-{
-    // 入力データをC++のvectorに変換
-    std::vector<unsigned char> imageData = convertJSArrayToVector(inputData);
-
-    // 目標のアスペクト比を計算
-    const double targetAspectRatio = 720.0 / 1280.0;
-    // const double inputAspectRatio = static_cast<double>(inputWidth) / inputHeight;
-
-    // 切り出すサイズを計算
-    int cropWidth, cropHeight;
-    calculateCropDimensions(inputWidth, inputHeight, targetAspectRatio,
-                            cropWidth, cropHeight);
-
-    // 切り出し開始位置を計算（中央に配置）
-    int startX = (inputWidth - cropWidth) / 2;
-    int startY = (inputHeight - cropHeight) / 2;
-
-    // 画像を切り出してリサイズ
-    std::vector<unsigned char> croppedData = cropAndResizeBilinear(
-        imageData, inputWidth, inputHeight,
-        startX, startY, cropWidth, cropHeight,
-        720, 1280);
-    // std::cout << "croppedData[0]: " << croppedData[0] << std::endl;
-    // 結果をJavaScript側に返す
-    return convertVectorToJSArray(croppedData);
-}
-
 // 切り出しサイズを計算
 void calculateCropDimensions(int inputWidth, int inputHeight,
                              double targetAspectRatio,
@@ -135,6 +106,35 @@ std::vector<unsigned char> cropAndResizeBilinear(
     return result;
 }
 
+
+// 画像データを処理するメインメソッド
+emscripten::val cropAndResizeImage(const emscripten::val &inputData, int inputWidth, int inputHeight)
+{
+    // 入力データをC++のvectorに変換
+    std::vector<unsigned char> imageData = convertJSArrayToVector(inputData);
+
+    // 目標のアスペクト比を計算
+    const double targetAspectRatio = 720.0 / 1280.0;
+    // const double inputAspectRatio = static_cast<double>(inputWidth) / inputHeight;
+
+    // 切り出すサイズを計算
+    int cropWidth, cropHeight;
+    calculateCropDimensions(inputWidth, inputHeight, targetAspectRatio,
+                            cropWidth, cropHeight);
+
+    // 切り出し開始位置を計算（中央に配置）
+    int startX = (inputWidth - cropWidth) / 2;
+    int startY = (inputHeight - cropHeight) / 2;
+
+    // 画像を切り出してリサイズ
+    std::vector<unsigned char> croppedData = cropAndResizeBilinear(
+        imageData, inputWidth, inputHeight,
+        startX, startY, cropWidth, cropHeight,
+        720, 1280);
+    // std::cout << "croppedData[0]: " << croppedData[0] << std::endl;
+    // 結果をJavaScript側に返す
+    return convertVectorToJSArray(croppedData);
+}
 // extern "C"
 // {
 //     // Function to capture the image from the camera
