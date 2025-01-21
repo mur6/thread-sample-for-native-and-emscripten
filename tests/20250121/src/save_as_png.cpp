@@ -12,38 +12,6 @@
 #include <iostream>
 #include "lodepng.h" // Include LodePNG for PNG encoding
 
-
-
-// 画像データを処理するメインメソッド
-emscripten::val ImageProcessor::processImage(const emscripten::val &inputData, int inputWidth, int inputHeight)
-{
-    // 入力データをC++のvectorに変換
-    std::vector<unsigned char> imageData = convertJSArrayToVector(inputData);
-
-    // 目標のアスペクト比を計算
-    const double targetAspectRatio = 720.0 / 1280.0;
-    //const double inputAspectRatio = static_cast<double>(inputWidth) / inputHeight;
-
-    // 切り出すサイズを計算
-    int cropWidth, cropHeight;
-    calculateCropDimensions(inputWidth, inputHeight, targetAspectRatio,
-                            cropWidth, cropHeight);
-
-    // 切り出し開始位置を計算（中央に配置）
-    int startX = (inputWidth - cropWidth) / 2;
-    int startY = (inputHeight - cropHeight) / 2;
-
-    // 画像を切り出してリサイズ
-    std::vector<unsigned char> croppedData = cropAndResize(
-        imageData, inputWidth, inputHeight,
-        startX, startY, cropWidth, cropHeight,
-        720, 1280);
-    std::cout << "croppedData[0]: " << croppedData[0] << std::endl;
-    // 結果をJavaScript側に返す
-    return convertVectorToJSArray(croppedData);
-}
-
-
 // JavaScriptの配列をC++のvectorに変換
 std::vector<unsigned char> convertJSArrayToVector(const emscripten::val &jsArray)
 {
@@ -75,10 +43,39 @@ emscripten::val convertVectorToJSArray(const std::vector<unsigned char> &vec)
     return result;
 }
 
+// 画像データを処理するメインメソッド
+emscripten::val ImageProcessor::processImage(const emscripten::val &inputData, int inputWidth, int inputHeight)
+{
+    // 入力データをC++のvectorに変換
+    std::vector<unsigned char> imageData = convertJSArrayToVector(inputData);
+
+    // 目標のアスペクト比を計算
+    const double targetAspectRatio = 720.0 / 1280.0;
+    // const double inputAspectRatio = static_cast<double>(inputWidth) / inputHeight;
+
+    // 切り出すサイズを計算
+    int cropWidth, cropHeight;
+    calculateCropDimensions(inputWidth, inputHeight, targetAspectRatio,
+                            cropWidth, cropHeight);
+
+    // 切り出し開始位置を計算（中央に配置）
+    int startX = (inputWidth - cropWidth) / 2;
+    int startY = (inputHeight - cropHeight) / 2;
+
+    // 画像を切り出してリサイズ
+    std::vector<unsigned char> croppedData = cropAndResize(
+        imageData, inputWidth, inputHeight,
+        startX, startY, cropWidth, cropHeight,
+        720, 1280);
+    // std::cout << "croppedData[0]: " << croppedData[0] << std::endl;
+    // 結果をJavaScript側に返す
+    return convertVectorToJSArray(croppedData);
+}
+
 // 切り出しサイズを計算
-void ImageProcessor::calculateCropDimensions(int inputWidth, int inputHeight,
-                                double targetAspectRatio,
-                                int &cropWidth, int &cropHeight)
+void calculateCropDimensions(int inputWidth, int inputHeight,
+                             double targetAspectRatio,
+                             int &cropWidth, int &cropHeight)
 {
     if (static_cast<double>(inputWidth) / inputHeight > targetAspectRatio)
     {
@@ -95,7 +92,7 @@ void ImageProcessor::calculateCropDimensions(int inputWidth, int inputHeight,
 }
 
 // 画像の切り出しとリサイズを行う
-std::vector<unsigned char> ImageProcessor::cropAndResize(
+std::vector<unsigned char> cropAndResize(
     const std::vector<unsigned char> &input,
     int inputWidth, int inputHeight,
     int startX, int startY,
@@ -217,9 +214,10 @@ std::vector<unsigned char> ImageProcessor::cropAndResize(
 //     return 0;
 // }
 
-void SaveAsPngFromUint8Array(const emscripten::val& uint8Array, int width, int height)
+void SaveAsPngFromUint8Array(const emscripten::val &uint8Array, int width, int height)
 {
-    if (!uint8Array.instanceof(emscripten::val::global("Uint8Array"))) {
+    if (!uint8Array.instanceof(emscripten::val::global("Uint8Array")))
+    {
         throw std::runtime_error("Input must be Uint8Array");
     }
 
@@ -229,11 +227,11 @@ void SaveAsPngFromUint8Array(const emscripten::val& uint8Array, int width, int h
 
     // Convert Uint8Array to vector<uint8_t> using typed array
     emscripten::val typedArray = uint8Array["constructor"].new_(
-        emscripten::val::global("ArrayBuffer").new_(length)
-    );
+        emscripten::val::global("ArrayBuffer").new_(length));
     typedArray.call<void>("set", uint8Array);
     // Copy the data
-    for (unsigned int i = 0; i < length; ++i) {
+    for (unsigned int i = 0; i < length; ++i)
+    {
         buffer[i] = typedArray[i].as<uint8_t>();
     }
 
