@@ -108,8 +108,17 @@ std::vector<unsigned char> cropAndResizeBilinear(
 
 
 // 画像データを処理するメインメソッド
-emscripten::val cropAndResizeImage(const emscripten::val &inputData, int inputWidth, int inputHeight)
+emscripten::val cropAndResizeImage(
+    const emscripten::val &inputData,
+    int inputWidth, int inputHeight,
+    int outputWidth, int outputHeight)
 {
+    // debug input size, output size
+    std::cout << "inputWidth: " << inputWidth << std::endl;
+    std::cout << "inputHeight: " << inputHeight << std::endl;
+    std::cout << "outputWidth: " << outputWidth << std::endl;
+    std::cout << "outputHeight: " << outputHeight << std::endl;
+
     // 入力データをC++のvectorに変換
     std::vector<unsigned char> imageData = convertJSArrayToVector(inputData);
 
@@ -130,7 +139,7 @@ emscripten::val cropAndResizeImage(const emscripten::val &inputData, int inputWi
     std::vector<unsigned char> croppedData = cropAndResizeBilinear(
         imageData, inputWidth, inputHeight,
         startX, startY, cropWidth, cropHeight,
-        720, 1280);
+        outputWidth, outputHeight);
     // std::cout << "croppedData[0]: " << croppedData[0] << std::endl;
     // 結果をJavaScript側に返す
     return convertVectorToJSArray(croppedData);
