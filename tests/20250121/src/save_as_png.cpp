@@ -19,8 +19,6 @@ emscripten::val ImageProcessor::processImage(const emscripten::val &inputData, i
 {
     // 入力データをC++のvectorに変換
     std::vector<unsigned char> imageData = convertJSArrayToVector(inputData);
-    // vector の 要素0 の値をプリント
-    std::cout << "imageData[0]: " << imageData[0] << std::endl;
 
     // 目標のアスペクト比を計算
     const double targetAspectRatio = 720.0 / 1280.0;
@@ -47,7 +45,7 @@ emscripten::val ImageProcessor::processImage(const emscripten::val &inputData, i
 
 
 // JavaScriptの配列をC++のvectorに変換
-std::vector<unsigned char> ImageProcessor::convertJSArrayToVector(const emscripten::val &jsArray)
+std::vector<unsigned char> convertJSArrayToVector(const emscripten::val &jsArray)
 {
     const auto length = jsArray["length"].as<unsigned>();
     std::vector<unsigned char> result(length);
@@ -64,7 +62,7 @@ std::vector<unsigned char> ImageProcessor::convertJSArrayToVector(const emscript
 }
 
 // C++のvectorをJavaScript配列に変換
-emscripten::val ImageProcessor::convertVectorToJSArray(const std::vector<unsigned char> &vec)
+emscripten::val convertVectorToJSArray(const std::vector<unsigned char> &vec)
 {
     emscripten::val Uint8Array = emscripten::val::global("Uint8Array");
     emscripten::val result = Uint8Array.new_(vec.size());
