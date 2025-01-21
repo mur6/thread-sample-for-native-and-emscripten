@@ -76,7 +76,6 @@ async function initVideo(Module) {
     outputCanvas.width = 720;
     outputCanvas.height = 1280;
     const captureButton = document.getElementById('captureButton');
-    const processor = new Module.ImageProcessor();
 
     navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'environment' },
@@ -100,8 +99,11 @@ async function initVideo(Module) {
             canvas.width,
             canvas.height
         );
+        console.log('processedData=', processedData);
+        console.log('processedData.length=', processedData.length);
+        console.log('processedData.data', processedData.data);
 
-        Module.SaveAsPngFromUint8Array("test.png", processedData);
+        Module.SaveAsPngFromUint8Array(processedData);
         const processedImageData = new ImageData(
             new Uint8ClampedArray(processedData),
             720,
