@@ -46,7 +46,7 @@ function cropAndResize(input, inputWidth, inputHeight, startX, startY, cropWidth
 const target_width = 720;
 const target_height = 1280;
 // 目標のアスペクト比
-const targetAspectRatio = float(target_height) / target_width;
+const targetAspectRatio = target_width / target_height;
 
 function cropCenterOfImage(inputData, inputWidth, inputHeight) {
     // 入力データの長さ
@@ -76,8 +76,8 @@ async function initVideo(Module) {
     const video = document.getElementById('videoElement');
     const canvas = document.getElementById('videoCanvas');
     const outputCanvas = document.getElementById('outputCanvas');
-    outputCanvas.width = 720;
-    outputCanvas.height = 1280;
+    outputCanvas.width = target_width;
+    outputCanvas.height = target_height;
     const captureButton = document.getElementById('captureButton');
 
     navigator.mediaDevices.getUserMedia({
@@ -107,12 +107,10 @@ async function initVideo(Module) {
         console.log('processedData.length=', processedData.length);
         console.log('processedData.data', processedData.data);
 
-        Module.SaveAsPngFromUint8Array(processedData);
+        Module.SaveAsPngFromUint8Array(processedData, target_width, target_height);
         const processedImageData = new ImageData(
             new Uint8ClampedArray(processedData),
-            720,
-            1280
-        );
+            target_width, target_height);
         const ctx = outputCanvas.getContext('2d');
         ctx.putImageData(processedImageData, 0, 0);
     });
