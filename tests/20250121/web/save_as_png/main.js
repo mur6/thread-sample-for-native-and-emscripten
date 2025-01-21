@@ -121,8 +121,7 @@ const run = async () => {
 
     const currentPath = '/working/';
     document.getElementById('showFilesButton').addEventListener('click', () => {
-        console.log("testFunc called");
-        Module.ccall('makeOnePngFile', null, [], []);
+        console.log("showFilesButton clicked");
         showFileList(Module.FS, currentPath);
     });
 }

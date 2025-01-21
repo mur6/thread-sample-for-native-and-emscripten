@@ -96,7 +96,7 @@ void SaveAsPngFromUint8Array(const val& uint8Array, int width, int height)
 
     unsigned int length = uint8Array["length"].as<unsigned int>();
     std::vector<uint8_t> vec(length); // バグの原因
-    uint8_t *buffer = vec.data();
+    uint8_t *buffer = vec.data(); // バグの原因
 
     // Encode the image as PNG using LodePNG
     std::vector<unsigned char> png;
