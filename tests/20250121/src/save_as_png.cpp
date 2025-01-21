@@ -1,4 +1,6 @@
 #include <emscripten.h>
+#include <emscripten/val.h>
+#include <emscripten/bind.h>
 #include <emscripten/html5.h>
 #include <vector>
 #include <chrono>
@@ -7,6 +9,7 @@
 #include <fstream>
 #include <algorithm>
 #include <cstdint>
+#include <iostream>
 #include "lodepng.h" // Include LodePNG for PNG encoding
 
 // extern "C"
@@ -88,9 +91,9 @@
 //     return 0;
 // }
 
-void SaveAsPngFromUint8Array(const val& uint8Array, int width, int height)
+void SaveAsPngFromUint8Array(const emscripten::val& uint8Array, int width, int height)
 {
-    if (!uint8Array.instanceof(val::global("Uint8Array"))) {
+    if (!uint8Array.instanceof(emscripten::val::global("Uint8Array"))) {
         throw std::runtime_error("Input must be Uint8Array");
     }
 
@@ -109,12 +112,13 @@ void SaveAsPngFromUint8Array(const val& uint8Array, int width, int height)
 
     // Save the PNG image to the Emscripten virtual file system
     // replace "/" in filename with "_"
+    /*
     std::string safeFilename = filename;
     std::replace(safeFilename.begin(), safeFilename.end(), '/', '_');
-    // append prefix "/outputs_wasm_2/"
     std::ofstream file("/outputs_wasm_2/" + safeFilename, std::ios::binary);
     file.write(reinterpret_cast<const char *>(png.data()), png.size());
     file.close();
+    */
 }
 
 EMSCRIPTEN_BINDINGS(my_module)
