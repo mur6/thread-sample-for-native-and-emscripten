@@ -4,7 +4,7 @@ import loadWASM from '/save_as_png/dist/my_em.js';
 import { showFileList } from '/save_as_png/em_fs.js';
 
 
-async function initVideo(init_params, Module) {
+async function initVideo(Module) {
     const video = document.getElementById('videoElement');
     const canvas = document.getElementById('videoCanvas');
     const outputCanvas = document.getElementById('outputCanvas');
@@ -36,18 +36,6 @@ async function initVideo(init_params, Module) {
             canvas.height
         );
 
-        // Call the C++ function using embind
-        // Module.simpleTest();
-        // console.log('Module.BuildAndReturnFootModel=', Module.BuildAndReturnFootModel);
-        // console.log('Module.processCameraImage=', Module.processCameraImage);
-        // Module.processCameraImage(inputImage, canvas.width, canvas.height).then(resizedImage => {
-        //     // Create ImageData from the returned vector
-        //     const resultImageData = new ImageData(new Uint8ClampedArray(resizedImage), 720, 1280);
-
-        //     // Draw the processed image to the canvas
-        //     outputCanvas.width = 720;
-        //     outputCanvas.height = 1280;
-        // });
         Module.SaveAsPngFromUint8Array("test.png", processedData);
         const processedImageData = new ImageData(
             new Uint8ClampedArray(processedData),
@@ -56,7 +44,6 @@ async function initVideo(init_params, Module) {
         );
         const ctx = outputCanvas.getContext('2d');
         ctx.putImageData(processedImageData, 0, 0);
-        // const result = validate(init_params, processedData, Module);
     });
 }
 
