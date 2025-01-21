@@ -44,7 +44,7 @@ emscripten::val convertVectorToJSArray(const std::vector<unsigned char> &vec)
 }
 
 // 画像データを処理するメインメソッド
-emscripten::val ImageProcessor::processImage(const emscripten::val &inputData, int inputWidth, int inputHeight)
+emscripten::val cropAndResizeImage(const emscripten::val &inputData, int inputWidth, int inputHeight)
 {
     // 入力データをC++のvectorに変換
     std::vector<unsigned char> imageData = convertJSArrayToVector(inputData);
@@ -63,7 +63,7 @@ emscripten::val ImageProcessor::processImage(const emscripten::val &inputData, i
     int startY = (inputHeight - cropHeight) / 2;
 
     // 画像を切り出してリサイズ
-    std::vector<unsigned char> croppedData = cropAndResize(
+    std::vector<unsigned char> croppedData = cropAndResizeBilinear(
         imageData, inputWidth, inputHeight,
         startX, startY, cropWidth, cropHeight,
         720, 1280);
@@ -92,7 +92,7 @@ void calculateCropDimensions(int inputWidth, int inputHeight,
 }
 
 // 画像の切り出しとリサイズを行う
-std::vector<unsigned char> cropAndResize(
+std::vector<unsigned char> cropAndResizeBilinear(
     const std::vector<unsigned char> &input,
     int inputWidth, int inputHeight,
     int startX, int startY,
@@ -255,5 +255,6 @@ void SaveAsPngFromUint8Array(const emscripten::val &uint8Array, int width, int h
 
 EMSCRIPTEN_BINDINGS(my_module)
 {
-    function("SaveAsPngFromUint8Array", &SaveAsPngFromUint8Array);
+    emscripten::function("cropAndResizeImage", &cropAndResizeImage);
+    emscripten::function("SaveAsPngFromUint8Array", &SaveAsPngFromUint8Array);
 }
