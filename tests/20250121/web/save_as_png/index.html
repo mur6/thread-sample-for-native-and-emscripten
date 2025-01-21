@@ -28,9 +28,17 @@
     </style>
 </head>
 <body>
-    <button id="showFilesButton">Show MEMFS Files</button>
-    <div id="fileList" class="file-list"></div>
-
+    <div class="container">
+        <video id="videoElement" autoplay></video>
+        <button id="captureButton">キャプチャ&validate</button>
+        <canvas id="videoCanvas"></canvas>
+        <canvas id="outputCanvas"></canvas>
+        <div id="output"></div>
+        <div id="sub-container">
+            <button id="showFilesButton">Show MEMFS Files</button>
+            <div id="fileList" class="file-list"></div>
+        </div>
+    </div>
     <script type="module" src="main.js"></script>
 </body>
 </html>
