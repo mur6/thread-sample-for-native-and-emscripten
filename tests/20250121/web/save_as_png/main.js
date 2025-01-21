@@ -43,13 +43,16 @@ function cropAndResize(input, inputWidth, inputHeight, startX, startY, cropWidth
     return croppedData;
 }
 
+const target_width = 720;
+const target_height = 1280;
+// 目標のアスペクト比
+const targetAspectRatio = float(target_height) / target_width;
+
 function cropCenterOfImage(inputData, inputWidth, inputHeight) {
     // 入力データの長さ
     console.log('inputData.length=', inputData.length);
     // 入力データの１つ目の要素をdebug出力
     console.log('inputData[0]=', inputData[0]);
-    // 目標のアスペクト比
-    const targetAspectRatio = 720.0 / 1280.0;
     // 切り出すサイズを計算
     const [cropWidth, cropHeight] = calculateCropDimensions(inputWidth, inputHeight, targetAspectRatio);
     // 切り出し開始位置を計算（中央に配置）
@@ -60,7 +63,7 @@ function cropCenterOfImage(inputData, inputWidth, inputHeight) {
     const croppedData = cropAndResize(
         inputData, inputWidth, inputHeight,
         startX, startY, cropWidth, cropHeight,
-        720, 1280);
+        target_width, target_height);
     const resultData = Uint8Array.from(croppedData);
     // 処理結果の長さをdebug出力
     console.log('resultData.length=', resultData.length);
@@ -94,6 +97,7 @@ async function initVideo(Module) {
         // Get image data from canvas
         const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
         // jsで画像の中央部を切り出す処理
+        const width = imageData.width;
         const processedData = cropCenterOfImage(
             imageData.data,
             canvas.width,
