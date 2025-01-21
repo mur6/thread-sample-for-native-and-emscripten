@@ -6,7 +6,7 @@ import { showFileList } from '/save_as_png/em_fs.js';
 const target_width = 720;
 const target_height = 1280;
 
-async function initVideo(Module) {
+async function initVideo(Module, cropedDataHook) {
     const video = document.getElementById('videoElement');
     const canvas = document.getElementById('videoCanvas');
     const outputCanvas = document.getElementById('outputCanvas');
@@ -43,13 +43,14 @@ async function initVideo(Module) {
         //     const emscripten::val &inputData,
         //     int inputWidth, int inputHeight,
         //     int outputWidth, int outputHeight);
-
         const croppedData = Module.cropAndResizeImage(
             inputData, canvas.width, canvas.height,
             target_width, target_height);
         console.log("croppedData:", croppedData);
         console.log("croppedData.length:", croppedData.length);
-        Module.SaveAsPngFromUint8Array(croppedData, target_width, target_height);
+        if (cropedDataHook) {
+            cropedDataHook(croppedData, target_width, target_height);
+        }
         const processedImageData = new ImageData(
             new Uint8ClampedArray(croppedData),
             target_width, target_height);
@@ -69,6 +70,10 @@ const run = async () => {
     FS.mount(MEMFS, {}, workingDirPath);
     FS.syncfs(true, function(err) { console.log('Filesystem synced'); });
 
+    const cropedDataHook = (data, width, height) => {
+        console.log("cropedDataHook called");
+        Module.SaveAsPngFromUint8Array(croppedData, width, height, "/working/cropped.png");
+    }
     initVideo(Module, cropedDataHook);
 
     document.getElementById('showFilesButton').addEventListener('click', () => {
