@@ -101,9 +101,6 @@ async function initVideo(Module) {
             imageData.data,
             target_width, target_height
         );
-        console.log('processedData=', processedData);
-        console.log('processedData.length=', processedData.length);
-        console.log('processedData.data', processedData.data);
 
         // Module.SaveAsPngFromUint8Array(processedData, target_width, target_height);
         const processedImageData = new ImageData(
