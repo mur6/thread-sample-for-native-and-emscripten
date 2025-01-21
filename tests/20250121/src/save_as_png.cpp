@@ -9,22 +9,6 @@
 #include <cstdint>
 #include "lodepng.h" // Include LodePNG for PNG encoding
 
-// Function to process the image and enhance red color
-void enhanceRed(uint8_t *buffer, int width, int height)
-{
-    int numPixels = width * height;
-    for (int i = 0; i < numPixels; ++i)
-    {
-        int offset = i * 4;
-        uint8_t blue = buffer[offset];
-        uint8_t green = buffer[offset + 1];
-        uint8_t red = buffer[offset + 2];
-
-        // Simple enhancement: amplify the red channel
-        buffer[offset + 2] = std::min(255, red + 50);
-    }
-}
-
 extern "C"
 {
     // Function to capture the image from the camera
@@ -36,11 +20,11 @@ extern "C"
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
 
-            navigator.mediaDevices.getUserMedia({video : true}).then(stream => {
+            navigator.mediaDevices.getUserMedia({video : true}).then(stream = > {
                 video.srcObject = stream;
                 video.play();
 
-                video.addEventListener('loadeddata', () => {
+                video.addEventListener('loadeddata', () = > {
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
                     context.drawImage(video, 0, 0);
@@ -88,8 +72,8 @@ extern "C"
         uint8_t *buffer = new uint8_t[width * height * 4];
         for (int i = 0; i < width * height * 4; i += 4)
         {
-            buffer[i] = 0;     // R
-            buffer[i + 1] = 0; // G
+            buffer[i] = 0;       // R
+            buffer[i + 1] = 0;   // G
             buffer[i + 2] = 255; // B
             buffer[i + 3] = 255; // A
         }
