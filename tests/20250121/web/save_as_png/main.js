@@ -97,17 +97,15 @@ async function initVideo(Module) {
         // Get image data from canvas
         const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
         // jsで画像の中央部を切り出す処理
-        const width = imageData.width;
         const processedData = cropCenterOfImage(
             imageData.data,
-            canvas.width,
-            canvas.height
+            target_width, target_height
         );
         console.log('processedData=', processedData);
         console.log('processedData.length=', processedData.length);
         console.log('processedData.data', processedData.data);
 
-        Module.SaveAsPngFromUint8Array(processedData, target_width, target_height);
+        // Module.SaveAsPngFromUint8Array(processedData, target_width, target_height);
         const processedImageData = new ImageData(
             new Uint8ClampedArray(processedData),
             target_width, target_height);
