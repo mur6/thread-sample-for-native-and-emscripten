@@ -35,6 +35,7 @@ async function initVideo(Module) {
         //     imageData.data,
         //     target_width, target_height
         // );
+        console.log("imageData:", imageData);
         const inputData = imageData.data;
         // 画像を切り出してリサイズ
         // emscripten::val cropAndResizeImage(
@@ -46,9 +47,9 @@ async function initVideo(Module) {
             inputData, canvas.width, canvas.height,
             target_width, target_height);
 
-        // Module.SaveAsPngFromUint8Array(processedData, target_width, target_height);
+        Module.SaveAsPngFromUint8Array(croppedData, target_width, target_height);
         const processedImageData = new ImageData(
-            new Uint8ClampedArray(processedData),
+            new Uint8ClampedArray(croppedData),
             target_width, target_height);
         const ctx = outputCanvas.getContext('2d');
         ctx.putImageData(processedImageData, 0, 0);
