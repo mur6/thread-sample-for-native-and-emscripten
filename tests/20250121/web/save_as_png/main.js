@@ -48,7 +48,6 @@ async function initVideo(Module) {
             inputData, canvas.width, canvas.height,
             target_width, target_height);
         console.log("croppedData:", croppedData);
-        //length
         console.log("croppedData.length:", croppedData.length);
         Module.SaveAsPngFromUint8Array(croppedData, target_width, target_height);
         const processedImageData = new ImageData(
@@ -64,12 +63,17 @@ const run = async () => {
     const wasmModule = await loadWASM();
     const Module = wasmModule;
     console.log("Module loaded:", Module);
-    initVideo(Module);
 
-    const currentPath = '/working/';
+    const workingDirPath = '/working/';
+    FS.mkdir(workingDirPath);
+    FS.mount(MEMFS, {}, workingDirPath);
+    FS.syncfs(true, function(err) { console.log('Filesystem synced'); });
+
+    initVideo(Module, cropedDataHook);
+
     document.getElementById('showFilesButton').addEventListener('click', () => {
         console.log("showFilesButton clicked");
-        showFileList(Module.FS, currentPath);
+        showFileList(Module.FS, workingDirPath);
     });
 }
 
