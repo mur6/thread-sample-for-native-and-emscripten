@@ -225,24 +225,12 @@ emscripten::val cropAndResizeImage(
 
 void SaveAsPngFromUint8Array(const emscripten::val &uint8Array, int width, int height)
 {
-    if (!uint8Array.instanceof(emscripten::val::global("Uint8Array")))
-    {
-        throw std::runtime_error("Input must be Uint8Array");
-    }
+    // debug input width, height
+    std::cout << "width: " << width << std::endl;
+    std::cout << "height: " << height << std::endl;
 
-    unsigned int length = uint8Array["length"].as<unsigned int>();
-    std::vector<uint8_t> buffer;
-    buffer.reserve(length);
-
-    // Convert Uint8Array to vector<uint8_t> using typed array
-    emscripten::val typedArray = uint8Array["constructor"].new_(
-        emscripten::val::global("ArrayBuffer").new_(length));
-    typedArray.call<void>("set", uint8Array);
-    // Copy the data
-    for (unsigned int i = 0; i < length; ++i)
-    {
-        buffer[i] = typedArray[i].as<uint8_t>();
-    }
+    // 入力データをC++のvectorに変換
+    std::vector<unsigned char> buffer = convertJSArrayToVector(uint8Array);
 
     // Encode the image as PNG using LodePNG
     std::vector<unsigned char> png;
