@@ -223,7 +223,7 @@ emscripten::val cropAndResizeImage(
 //     return 0;
 // }
 
-void SaveAsPngFromUint8Array(const emscripten::val &uint8Array, int width, int height)
+void SaveAsPngFromUint8Array(const emscripten::val &uint8Array, int width, int height, const std::string &filePath)
 {
     // debug input width, height
     std::cout << "width: " << width << std::endl;
@@ -243,9 +243,9 @@ void SaveAsPngFromUint8Array(const emscripten::val &uint8Array, int width, int h
 
     // Save the PNG image to the Emscripten virtual file system
     // replace "/" in filename with "_"
-    std::string safeFilename = "test.png";
-    std::replace(safeFilename.begin(), safeFilename.end(), '/', '_');
-    std::ofstream file("/outputs_wasm_2/" + safeFilename, std::ios::binary);
+    // std::string safeFilename = "test.png";
+    // std::replace(safeFilename.begin(), safeFilename.end(), '/', '_');
+    std::ofstream file(filePath, std::ios::binary);
     file.write(reinterpret_cast<const char *>(png.data()), png.size());
     file.close();
 }

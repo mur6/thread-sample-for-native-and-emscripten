@@ -65,12 +65,14 @@ const run = async () => {
     const Module = wasmModule;
     console.log("Module loaded:", Module);
 
+    const FS = Module.FS;
+    const MEMFS = Module.MEMFS;
     const workingDirPath = '/working/';
     FS.mkdir(workingDirPath);
     FS.mount(MEMFS, {}, workingDirPath);
     FS.syncfs(true, function(err) { console.log('Filesystem synced'); });
 
-    const cropedDataHook = (data, width, height) => {
+    const cropedDataHook = (croppedData, width, height) => {
         console.log("cropedDataHook called");
         Module.SaveAsPngFromUint8Array(croppedData, width, height, "/working/cropped.png");
     }
