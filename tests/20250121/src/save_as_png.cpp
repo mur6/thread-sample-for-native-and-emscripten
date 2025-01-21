@@ -101,13 +101,15 @@ void SaveAsPngFromUint8Array(const emscripten::val& uint8Array, int width, int h
     std::vector<uint8_t> buffer;
     buffer.reserve(length);
 
-    // Convert Uint8Array to vector<uint8_t>
-    emscripten::val memoryView = emscripten::val::global("Uint8Array").new_(
-        emscripten::val::global("Module")["HEAPU8"]["buffer"],
-        reinterpret_cast<uintptr_t>(buffer.data()),
-        length
+    // Convert Uint8Array to vector<uint8_t> using typed array
+    emscripten::val typedArray = uint8Array["constructor"].new_(
+        emscripten::val::global("ArrayBuffer").new_(length)
     );
-    memoryView.call<void>("set", uint8Array);
+    typedArray.call<void>("set", uint8Array);
+    // Copy the data
+    for (unsigned int i = 0; i < length; ++i) {
+        buffer[i] = typedArray[i].as<uint8_t>();
+    }
 
     // Encode the image as PNG using LodePNG
     std::vector<unsigned char> png;
