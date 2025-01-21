@@ -43,7 +43,7 @@ function cropAndResize(input, inputWidth, inputHeight, startX, startY, cropWidth
     return croppedData;
 }
 
-function processImage(inputData, inputWidth, inputHeight) {
+function cropCenterOfImage(inputData, inputWidth, inputHeight) {
     // 入力データの長さ
     console.log('inputData.length=', inputData.length);
     // 入力データの１つ目の要素をdebug出力
@@ -95,7 +95,7 @@ async function initVideo(Module) {
         // Get image data from canvas
         const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
         // jsで画像の中央部を切り出す処理
-        const processedData = processImage(
+        const processedData = cropCenterOfImage(
             imageData.data,
             canvas.width,
             canvas.height
@@ -117,6 +117,7 @@ const run = async () => {
     const wasmModule = await loadWASM();
     const Module = wasmModule;
     console.log("Module loaded:", Module);
+    initVideo(Module);
 
     const currentPath = '/working/';
     document.getElementById('showFilesButton').addEventListener('click', () => {
