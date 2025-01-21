@@ -98,8 +98,16 @@ void SaveAsPngFromUint8Array(const emscripten::val& uint8Array, int width, int h
     }
 
     unsigned int length = uint8Array["length"].as<unsigned int>();
-    std::vector<uint8_t> vec(length); // バグの原因
-    uint8_t *buffer = vec.data(); // バグの原因
+    std::vector<uint8_t> buffer;
+    buffer.reserve(length);
+
+    // Convert Uint8Array to vector<uint8_t>
+    emscripten::val memoryView = emscripten::val::global("Uint8Array").new_(
+        emscripten::val::global("Module")["HEAPU8"]["buffer"],
+        reinterpret_cast<uintptr_t>(buffer.data()),
+        length
+    );
+    memoryView.call<void>("set", uint8Array);
 
     // Encode the image as PNG using LodePNG
     std::vector<unsigned char> png;
@@ -112,13 +120,11 @@ void SaveAsPngFromUint8Array(const emscripten::val& uint8Array, int width, int h
 
     // Save the PNG image to the Emscripten virtual file system
     // replace "/" in filename with "_"
-    /*
-    std::string safeFilename = filename;
+    std::string safeFilename = "test.png";
     std::replace(safeFilename.begin(), safeFilename.end(), '/', '_');
     std::ofstream file("/outputs_wasm_2/" + safeFilename, std::ios::binary);
     file.write(reinterpret_cast<const char *>(png.data()), png.size());
     file.close();
-    */
 }
 
 EMSCRIPTEN_BINDINGS(my_module)
